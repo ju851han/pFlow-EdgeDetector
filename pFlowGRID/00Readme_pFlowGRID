@@ -1,0 +1,2 @@
+conda activate pg
+python main.py
