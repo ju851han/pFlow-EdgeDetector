@@ -11,12 +11,12 @@ def save_rectangle():
     Stores nodes (=points, corners) of rectangle
     :return: None
     """
-    rectangle = Polygon()
-    rectangle.add_point(100, 100)
-    rectangle.add_point(100, 500)
-    rectangle.add_point(800, 500)
-    rectangle.add_point(800, 100)
-    rectangle.save_to_file()
+    r = Polygon()
+    r.add_point(100, 100)
+    r.add_point(100, 500)
+    r.add_point(800, 500)
+    r.add_point(800, 100)
+    r.save_to_file()
 
 
 def save_polygon(point_list, file="polygon.nsv"):
