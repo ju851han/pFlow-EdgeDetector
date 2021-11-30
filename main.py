@@ -57,6 +57,11 @@ def create_polygon(point_list):
 # rectangle.add_inner_polygons(obstacle2)
 # rectangle.save_to_file("polygon_with_inner_obstacles.nsv")
 
-
+#ImageCleaner-Class
+os.chdir('training_images')
+for file_name in os.listdir(os.getcwd()):
+    ic = ImageCleaner(image_path=file_name)
+    # ic.transform_colorful_to_gray_img()
+    ic.show_image()
 
 # window_width = "1300" , window_height = "610"
