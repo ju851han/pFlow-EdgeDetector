@@ -8,8 +8,8 @@ import os
 
 # FUNCTION DEFINITION SECTION
 def save_rectangle():
-    """
-    Stores nodes (=points, corners) of rectangle
+    """Stores nodes (=points, corners) of rectangle
+
     :return: None
     """
     r = Polygon()
@@ -21,8 +21,8 @@ def save_rectangle():
 
 
 def save_polygon(point_list, file="polygon.nsv"):
-    """
-    Stores nodes (=points, corners) of a polygon
+    """Stores nodes (=points, corners) of a polygon
+
     :param point_list: list with points which are tuples(x-coordinate, value of y-coordinate)
     :param file: path of file
     :return: None
@@ -32,8 +32,8 @@ def save_polygon(point_list, file="polygon.nsv"):
 
 
 def create_polygon(point_list):
-    """
-    Creates nodes (=points, corners) of a polygon
+    """Creates nodes (=points, corners) of a polygon
+
     :param point_list: list with points which are tuples(x-coordinate, value of y-coordinate)
     :return: Polygon
     """
