@@ -32,7 +32,13 @@ class ImageCleaner:
     def transform_colored_into_gray_img(self):
         """Changes a color image into a gray value image and overwrites the variable image.
 
-        :return: Image
+        :return: None
         """
         self.image = cv2.cvtColor(self.image, cv2.COLOR_RGB2GRAY)
 
+    def apply_canny_filter(self):
+        """
+         Places a Filter according to the Canny Edge Algorithm over the image and overwrites the variable image.
+        :return: None
+        """
+        self.image = cv2.Canny(image=self.image, threshold1=125, threshold2=175)    #TODO threshhold bestimmen
