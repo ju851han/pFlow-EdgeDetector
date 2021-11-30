@@ -12,6 +12,8 @@ class ImageCleaner:
         If no flags have been set, the image is colored.
         """
         self.image = cv2.imread(filename=image_path)    # , flags=0)
+        if self.image is None:
+            raise AttributeError("Image-file can't be found. The affected image-path is:" + image_path)
 
     def show_image(self, scale=1):
         """Displays a Picture
@@ -20,7 +22,7 @@ class ImageCleaner:
         :return: None
         """
         if scale < 0 or scale > 1:
-            raise ValueError("Scale must be between 0 and 1.\nCurrent value of the scale: ", scale)
+            raise ValueError("Scale must be between 0 and 1.\nCurrent value of the scale: " + str(scale))
         else:
             width = int(self.image.shape[1] * scale)
             height = int(self.image.shape[0] * scale)
