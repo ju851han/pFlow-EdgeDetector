@@ -3,16 +3,16 @@ from tkinter import filedialog
 
 class Polygon:
     def __init__(self):
-        """
-        Constructor
+        """Constructor
+
         """
         self.points = []
         self.border_color = 'black'
         self.inner_polygons = []
 
     def add_inner_polygons(self, polygon):
-        """
-        Adds an inner-polygon into the list of an outer-polygon.
+        """Adds an inner-polygon into the list of an outer-polygon.
+
         Inner_polygons can be obstacles.
         :param polygon: Polygon
         :return: None
@@ -20,8 +20,8 @@ class Polygon:
         self.inner_polygons.append(polygon)
 
     def add_point(self, x, y):
-        """
-        Sets a node (=point, corner) and adds it to a list
+        """Sets a node (=point, corner) and adds it to a list
+
         :param x: x-coordinate
         :param y: y-coordinate
         :return: None
@@ -30,8 +30,8 @@ class Polygon:
 
     @property
     def __transform_pointlist_to_saving_string(self):
-        """
-        Converts a points into a string which is later saved in a file.
+        """Converts a points into a string which is later saved in a file.
+
         Origin method: pFlowGRID.main.create_save_to_file_string()
         :return: str
         """
@@ -56,8 +56,8 @@ class Polygon:
         return save
 
     def save_to_file(self, file=None):
-        """
-        Writes and saves the saving_string into the file.
+        """Writes and saves the saving_string into the file.
+
         Origin method: pFlowGRID.main.save_to_file()
         File ending .nsv is used by pFlow.
         :param file: path of the file
