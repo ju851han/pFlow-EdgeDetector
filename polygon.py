@@ -26,7 +26,11 @@ class Polygon:
         :param y: y-coordinate
         :return: None
         """
-        self.points.append((x, y))
+        try:
+            self.points.append((int(x), int(y)))
+        except ValueError as v:
+            print("Values must be numbers.\nCurrent x: {} \nCurrent y: {}".format(x, y))
+            raise v
 
     @property
     def __transform_pointlist_to_saving_string(self):
