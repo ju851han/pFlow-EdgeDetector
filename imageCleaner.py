@@ -72,3 +72,28 @@ class ImageCleaner:
         """
         self.image = cv2.erode(self.image, kernel=kernel_size, iterations=number_of_iterations)
 
+  def resize_image(self, x, y):
+        """ Changes the size of the image.
+
+        :param x: size of the x-axis
+        :param y: size of the y-axis
+        :return: None
+        """
+        orig_width = int(self.image.shape[1])
+        orig_height = int(self.image.shape[0])
+        if x < orig_width or y < orig_height:
+            self.image = cv2.resize(src=self.image, dsize=(x, y), interpolation=cv2.INTER_AREA)
+        else:
+            self.image = cv2.resize(src=self.image, dsize=(x, y), interpolation=cv2.INTER_CUBIC)    #TODO welche Interpolation ist besser? z80 oder z 81?
+            self.image = cv2.resize(src=self.image, dsize=(x, y), interpolation=cv2.INTER_LINEAR)
+
+    def snip_image(self, x_min, x_max, y_min, y_max):
+        """ Cuts out an image. The result is a cropped image.
+
+        :param x_min: start on the x-axis
+        :param x_max: end on the x-axis
+        :param y_min: start on the y-axis
+        :param y_max: end on the y-axis
+        :return: None
+        """
+        self.image = self.image[x_min:x_max, y_min:y_max]
