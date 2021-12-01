@@ -40,11 +40,11 @@ class ImageCleaner:
         self.image = cv2.cvtColor(self.image, cv2.COLOR_RGB2GRAY)
 
     def add_gaussian_blur(self, kernel_size=(3, 3)):
-        """
+        """Smooth the image.
 
         ksize in cv2.GussianBlur() is an abbreviation for kernel size
-        If ksize is high (e.g.: (7,7)), then the noise is also high.
-        If ksize is low (e.g.: (3,3)), then the noise is also low.
+        If the noise is also high, then a high ksize is recommended (e.g.: (7,7)).
+        If the noise is also low, then a smaller ksize is recommended (e.g.: (3,3)).
         Hint: If the apply_canny_filter() is called after add_gussian_blur, then the noises are removed
         :return: None
         """
@@ -57,3 +57,18 @@ class ImageCleaner:
         :return: None
         """
         self.image = cv2.Canny(image=self.image, threshold1=125, threshold2=175)  # TODO threshhold bestimmen
+
+    def dilating_image(self, kernel_size=(3, 3), number_of_iterations=1):
+        """Expands Pixel
+
+        :return:
+        """
+        self.image = cv2.dilate(src=self.image, kernel=kernel_size, iterations=number_of_iterations)
+
+    def eroding_image(self, kernel_size=(3, 3), number_of_iterations=1):
+        """Reduces Pixel
+
+        :return:
+        """
+        self.image = cv2.erode(self.image, kernel=kernel_size, iterations=number_of_iterations)
+
