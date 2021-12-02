@@ -72,7 +72,7 @@ class ImageCleaner:
         """
         self.image = cv2.erode(self.image, kernel=kernel_size, iterations=number_of_iterations)
 
-  def resize_image(self, x, y):
+    def resize_image(self, x, y):
         """ Changes the size of the image.
 
         :param x: size of the x-axis
@@ -97,3 +97,35 @@ class ImageCleaner:
         :return: None
         """
         self.image = self.image[x_min:x_max, y_min:y_max]
+
+    def change_color_in_area(self, y_min, y_max, x_min, x_max, blue=0, green=0, red=0):
+        """Changes color in an image area
+
+        y_min, y_max: variables for y-axis; 0 is at top, max is at bottom
+        x_min, x_max: variables for x-axis; 0 is in the left corner, max is on the right side
+        :param y_min: int
+        :param y_max: int
+        :param x_min: int
+        :param x_max: int
+        :param blue: int
+        :param green: int
+        :param red: int
+        :return: None
+        """
+        self.image[y_min:y_max, x_min:x_max] = blue, green, red
+        cv2.imshow('Colorful Area', self.image)
+        cv2.waitKey(0)
+
+    def change_color_in_pixel(self, y, x, blue=0, green=0, red=0):
+        """Changes color only in one pixel.
+
+        :param y: int; variable for y-axis; 0 is at top, max is at bottom.
+        :param x: int; variables for x-axis; 0 is in the left corner, max is on the right side.
+        :param blue: int
+        :param green: int
+        :param red: int
+        :return: None
+        """
+        self.image[y, x] = blue, green, red
+        cv2.imshow('Colorful Pixel', self.image)
+        cv2.waitKey(0)
