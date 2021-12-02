@@ -11,13 +11,14 @@ class ImageCleaner:
 
         flags=0 in cv2.imread()-method means that the passed image is transformed as a gray value image.
         If no flags have been set, the image is colored.
+        :param image_path:
         """
         self.image = cv2.imread(filename=image_path)  # , flags=0)
         if self.image is None:
             raise AttributeError("Image-file can't be found. The affected image-path is:" + image_path)
 
     def show_image(self, scale=1):
-        """Displays a Picture
+        """Displays a Picture.
 
         :param scale: int between [0,1]
         :return: None
@@ -46,9 +47,10 @@ class ImageCleaner:
         If the noise is also high, then a high ksize is recommended (e.g.: (7,7)).
         If the noise is also low, then a smaller ksize is recommended (e.g.: (3,3)).
         Hint: If the apply_canny_filter() is called after add_gussian_blur, then the noises are removed
+        :param kernel_size: int; TODO
         :return: None
         """
-        self.image = cv2.GaussianBlur(src=self.image, ksize=kernel_size, borderType=cv2.BORDER_DEFAULT)
+        self.image = cv2.GaussianBlur(src=self.image, ksize=kernel_size, sigmaX=cv2.BORDER_DEFAULT)
 
     def apply_canny_filter(self):
         """Places a Filter according to the Canny Edge Algorithm over the image and overwrites the variable image.
@@ -61,22 +63,26 @@ class ImageCleaner:
     def dilating_image(self, kernel_size=(3, 3), number_of_iterations=1):
         """Expands Pixel
 
-        :return:
+        :param kernel_size: int; TODO
+        :param number_of_iterations: int; TODO
+        :return: None
         """
         self.image = cv2.dilate(src=self.image, kernel=kernel_size, iterations=number_of_iterations)
 
     def eroding_image(self, kernel_size=(3, 3), number_of_iterations=1):
         """Reduces Pixel
 
-        :return:
+        :param kernel_size: int; TODO
+        :param number_of_iterations: int; TODO
+        :return: None
         """
         self.image = cv2.erode(self.image, kernel=kernel_size, iterations=number_of_iterations)
 
     def resize_image(self, x, y):
         """ Changes the size of the image.
 
-        :param x: size of the x-axis
-        :param y: size of the y-axis
+        :param x: int; size of the x-axis
+        :param y: int; size of the y-axis
         :return: None
         """
         orig_width = int(self.image.shape[1])
@@ -90,10 +96,10 @@ class ImageCleaner:
     def snip_image(self, x_min, x_max, y_min, y_max):
         """ Cuts out an image. The result is a cropped image.
 
-        :param x_min: start on the x-axis
-        :param x_max: end on the x-axis
-        :param y_min: start on the y-axis
-        :param y_max: end on the y-axis
+        :param x_min: int; start on the x-axis
+        :param x_max: int; end on the x-axis
+        :param y_min: int; start on the y-axis
+        :param y_max: int; end on the y-axis
         :return: None
         """
         self.image = self.image[x_min:x_max, y_min:y_max]
