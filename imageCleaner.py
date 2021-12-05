@@ -17,9 +17,11 @@ class ImageCleaner:
         if self.image is None:
             raise AttributeError("Image-file can't be found. The affected image-path is:" + image_path)
 
-    def show_image(self, scale=1):
+    def show_image(self, scale=1, title='Image', wait_for_close=False):
         """Displays a Picture.
 
+        :param wait_for_close: bool; if this is True, then the window will be closed as soon a button is pressed
+        :param title: str; text for window frame
         :param scale: int between [0,1]
         :return: None
         """
@@ -30,8 +32,9 @@ class ImageCleaner:
             height = int(self.image.shape[0] * scale)
             dimensions = (width, height)
             frame_resized = cv2.resize(self.image, dimensions, interpolation=cv2.INTER_AREA)
-            cv2.imshow('Image', frame_resized)
-            cv2.waitKey(0)
+            cv2.imshow(title, frame_resized)
+            if wait_for_close:
+                cv2.waitKey(0)
 
     def transform_colored_into_gray_img(self):
         """Changes a color image into a gray value image and overwrites the variable image.
@@ -90,7 +93,8 @@ class ImageCleaner:
         if x < orig_width or y < orig_height:
             self.image = cv2.resize(src=self.image, dsize=(x, y), interpolation=cv2.INTER_AREA)
         else:
-            self.image = cv2.resize(src=self.image, dsize=(x, y), interpolation=cv2.INTER_CUBIC)    #TODO welche Interpolation ist besser? z80 oder z 81?
+            self.image = cv2.resize(src=self.image, dsize=(x, y),
+                                    interpolation=cv2.INTER_CUBIC)  # TODO welche Interpolation ist besser? z80 oder z 81?
             self.image = cv2.resize(src=self.image, dsize=(x, y), interpolation=cv2.INTER_LINEAR)
 
     def snip_image(self, x_min, x_max, y_min, y_max):
