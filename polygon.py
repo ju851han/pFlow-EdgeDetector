@@ -22,8 +22,8 @@ class Polygon:
     def add_point(self, x, y):
         """Sets a node (=point, corner) and adds it to a list
 
-        :param x: x-coordinate
-        :param y: y-coordinate
+        :param x: int; x-coordinate
+        :param y: int; y-coordinate
         :return: None
         """
         try:
@@ -64,7 +64,7 @@ class Polygon:
 
         Origin method: pFlowGRID.main.save_to_file()
         File ending .nsv is used by pFlow.
-        :param file: path of the file
+        :param file: str; path of the file
         :return: None
         """
         # .nsv -> nik save
