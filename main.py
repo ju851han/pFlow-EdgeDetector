@@ -1,6 +1,7 @@
 # IMPORT SECTION
 from polygon import Polygon
 from imageCleaner import ImageCleaner
+from imageAnalyzer import ImageAnalyzer
 import os
 
 # PARAMETER SECTION
@@ -39,7 +40,7 @@ def create_polygon(point_list):
     """
     if len(point_list) < 3:
         raise Exception('This is not a polygon. A polygon must have more than 2 points.\n'
-                        'Number of points which were given in the list:', len(point_list))
+                        'Number of points which were given in the list:' + str(len(point_list)))
     polygon = Polygon()
     for point in point_list:
         polygon.add_point(point[0], point[1])
@@ -50,19 +51,26 @@ def create_polygon(point_list):
 
 # Polygon-Class
 # save_rectangle()
-# rectangle = create_polygon([(100, 100), (100, 500), (800, 500), (800, 100)])
-# obstacle1 = create_polygon([(120, 150), (130, 110), (125, 170)])
-# obstacle2 = create_polygon([(600, 270), (600, 350), (650, 350), (650, 270)])
-# rectangle.add_inner_polygons(obstacle1)
-# rectangle.add_inner_polygons(obstacle2)
-# rectangle.save_to_file("polygon_with_inner_obstacles.nsv")
+#rectangle = create_polygon([(100, 100), (100, 500), (800, 500), (800, 100)])
+#obstacle1 = create_polygon([(120, 150), (130, 110), (125, 170)])
+#obstacle2 = create_polygon([(600, 270), (600, 350), (650, 350), (650, 270)])
+#rectangle.add_inner_polygons(obstacle1)
+#rectangle.add_inner_polygons(obstacle2)
+#rectangle.save_to_file("polygon_with_inner_obstacles.nsv")
 
-#ImageCleaner-Class
+# ImageCleaner-Class
+#ImageCleaner(image_path='blabla')
+#exit(0)
+
 os.chdir('training_images')
 for file_name in os.listdir(os.getcwd()):
     ic = ImageCleaner(image_path=file_name)
-    # ic.transform_colorful_to_gray_img()
+    ic.show_image(title='Original Image')
+    ic.transform_colored_into_gray_img()
+    ic.show_image(title='Gray Image')
+    ic.add_gaussian_blur()
+    ic.show_image(title='Blurred Image')
     ic.apply_canny_filter()
-    ic.show_image()
+    ic.show_image(title='Canny Image', wait_for_close=True)
 
-# window_width = "1300" , window_height = "610"
+# pFlowGRID: window_width = "1300" , window_height = "610"
