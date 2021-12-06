@@ -24,7 +24,8 @@ class PolygonTestCase(unittest.TestCase):
     def test_add_string_point(self):
         """ Tests what happens if the method is passed a string instead of integer
 
-        Hint: There is no overflow for integer numbers in Python 3. That's why no further tests for add_point() is needed.
+        Hint: There is no overflow for integer numbers in Python 3. That's why no further tests for add_point() is
+        needed.
         :return: None
         """
         self.assertRaises(ValueError, self.p.add_point, 'a', 'b')
