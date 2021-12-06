@@ -1,30 +1,54 @@
 import cv2
 from matplotlib import pyplot as plt
+import numpy as np
+
 
 class ImageAnalyzer:
     def __init__(self, image):
         """Constructor
 
         """
-        self.image = image
+        self.image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
         if self.image is None:
             raise AttributeError("Image-file can't be found.")
 
-    def plot_histogram(self):
+    def plot_grayscale_histogram(self, mask=None):
         """ Displays intensity values from an image.
 
         :return:None
         """
-        # Source : Program 3.1 Seite 49 Burge2015
-        #     h = img.shape[1] # OR : np.size(img,0)    #source: https://stackoverflow.com/questions/13033278/image-size-python-opencv AND https://appdividend.com/2020/09/09/python-cv2-image-size-how-to-get-image-size-in-python/
-        #     w = img.shape[0] # OR: np.size(img,1)
-        #     hist = []
-        #     for i in range(0,256):
-        #         p.append(0)
-        #     for height in range(0, h-1):
-        #         for width in range(0, w-1):
-        #             i = img[width, height]     #source: https://stackoverflow.com/questions/28981417/how-do-i-access-the-pixels-of-an-image-using-opencv-python
-        #             hist[i]= hist[i] + 1
-        hist = cv2.calcHist([self.image], [0], None, [256], [0, 256])
+        hist = cv2.calcHist([self.image], [0], mask, [256], [0, 256])
+        plt.figure()
+        plt.title('Grayscale Histogram')
+        plt.xlabel('Bins')
+        plt.ylabel('Number of Pixels')
         plt.plot(hist)
+        plt.xlim([0, 256])
+        plt.show()
+
+    def create_mask(self):
+        """ circle in the middle of the image.
+
+        :return: mask
+        """
+        blank = np.zeros(self.image.shape[:2], dtype='uint8')
+        circle = cv2.circle(img=blank, center=(self.image.shape[1] // 2, self.image.shape[0] // 2), radius=100, color=2)
+        return cv2.bitwise_and(src1=self.image, src2=self.image, mask=circle)
+
+    def plot_color_histogram(self, mask=None):
+        """
+
+        :param mask:
+        :return:
+        """
+        colors = ('b', 'g', 'r')
+        for i, color in enumerate(colors):
+            hist = cv2.calcHist([self.image], [i], mask, [256], [0, 256])
+            plt.plot(hist, color)
+
+        plt.figure()
+        plt.title('Colorful Histogram')
+        plt.xlabel('Bins')
+        plt.ylabel('Number of Pixels')
+        plt.xlim([0, 256])
         plt.show()
