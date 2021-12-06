@@ -105,6 +105,29 @@ class ImageCleaner:
         """
         self.image = cv2.erode(self.image, kernel=kernel_size, iterations=number_of_iterations)
 
+    def identify_contours_and_hierarchies(self, mode='all hierarchic contours', method='CHAIN_APPROX_NONE'):
+        """
+
+        :param method:
+        :param mode:
+        :return: contours is list of all the contours which are found in the image
+             hierarchies contains information about the image topology
+        """
+        if mode == 'all hierarchic contours':
+            mode = cv2.RETR_TREE
+        elif mode == 'all external contours':
+            mode = cv2.RETR_EXTERNAL
+        else:  # all contours
+            mode = cv2.RETR_LIST
+
+        if method == 'CHAIN_APPROX_SIMPLE':
+            method = cv2.CHAIN_APPROX_SIMPLE
+        else:       # method == 'CHAIN_APPROX_NONE'
+            method = cv2.CHAIN_APPROX_NONE
+
+        contours, hierarchies = cv2.findContours(image=self.image, mode=mode, method=method) # image should be a canny image
+        return contours, hierarchies
+
     def resize_image(self, x, y):
         """ Changes the size of the image.
 
