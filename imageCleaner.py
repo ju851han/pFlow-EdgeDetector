@@ -2,7 +2,7 @@ import cv2
 
 
 class ImageCleaner:
-    """
+    """Class for Loading and Processing Images (Pictures)
 
     """
 
@@ -54,6 +54,30 @@ class ImageCleaner:
         :return: None
         """
         self.image = cv2.GaussianBlur(src=self.image, ksize=kernel_size, sigmaX=cv2.BORDER_DEFAULT)
+
+    def add_average_blur(self, kernel_size=(3, 3)):
+        """Calculates the average of the intensity values in the kernel
+
+        :param kernel_size:
+        :return: None
+        """
+        self.image = cv2.blur(src=self.image, ksize=kernel_size)
+
+    def add_median_blur(self, kernel_size=3):
+        """
+
+        :param kernel_size:
+        :return:
+        """
+        self.image = cv2.medianBlur(src=self.image, ksize=kernel_size)
+
+    def add_bilateral_blur(self, kernel_size=5):
+        """
+
+        :param kernel_size:
+        :return:
+        """
+        self.image = cv2.bilateralFilter(src=self.image, d=kernel_size, sigmaSpace=15, sigmaColor=15)
 
     def apply_canny_filter(self):
         """Places a Filter according to the Canny Edge Algorithm over the image and overwrites the variable image.
