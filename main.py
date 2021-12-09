@@ -48,33 +48,39 @@ def create_polygon(point_list):
     return polygon
 
 
+def save_polygons():
+    """Create and save a polygon with 2 inner polygons.
+
+    :return: None
+    """
+    rectangle = create_polygon([(100, 100), (100, 500), (800, 500), (800, 100)])
+    obstacle1 = create_polygon([(120, 150), (130, 110), (125, 170)])
+    obstacle2 = create_polygon([(600, 270), (600, 350), (650, 350), (650, 270)])
+    rectangle.add_inner_polygons(obstacle1)
+    rectangle.add_inner_polygons(obstacle2)
+    rectangle.save_to_file("polygon_with_inner_obstacles.nsv")
+
+
 # EXECUTE SECTION
 
 # Polygon-Class
 # save_rectangle()
-# rectangle = create_polygon([(100, 100), (100, 500), (800, 500), (800, 100)])
-# obstacle1 = create_polygon([(120, 150), (130, 110), (125, 170)])
-# obstacle2 = create_polygon([(600, 270), (600, 350), (650, 350), (650, 270)])
-# rectangle.add_inner_polygons(obstacle1)
-# rectangle.add_inner_polygons(obstacle2)
-# rectangle.save_to_file("polygon_with_inner_obstacles.nsv")
+# save_polygons()
 
 # ImageCleaner-Class
-# ImageCleaner(image_path='blabla')
-# exit(0)
 
 os.chdir('training_images')
 for file_name in os.listdir(os.getcwd()):
-    ic = ImageCleaner(image_path=file_name)
-#    ic.show_image(title='Original Image')
-#    ic.transform_colored_into_gray_img()
-#    ic.show_image(title='Gray Image')
-#    ic.add_gaussian_blur()
-#    ic.show_image(title='Blurred Image')
-#    ic.apply_canny_filter()
-#    ic.show_image(title='Canny Image', wait_for_close=True)
-    ia = ImageAnalyzer(ic.image)
-    ia.plot_grayscale_histogram()
-
-
+    if file_name.lower().endswith('.png') or file_name.lower().endswith('.jpg'):
+        ic = ImageCleaner(image_path=file_name)
+        print(file_name)
+        # ic.show_image(title='Original Image')
+        # ic.transform_colored_into_gray_img()
+        # ic.show_image(title='Gray Image', wait_for_close=True)
+        # ic.add_gaussian_blur()
+        # ic.show_image(title='Blurred Image')
+        # ic.apply_canny_filter()
+        # ic.show_image(title='Canny Image', wait_for_close=True)
+        ia = ImageAnalyzer(ic.image)
+        ia.plot_histogram(mask=ia.create_round_mask())
 # pFlowGRID: window_width = "1300" , window_height = "610"
