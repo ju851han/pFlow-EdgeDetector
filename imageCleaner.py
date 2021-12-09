@@ -11,7 +11,7 @@ class ImageCleaner:
 
         flags=0 in cv2.imread()-method means that the passed image is transformed as a gray value image.
         If no flags have been set, the image is colored.
-        :param image_path:
+        :param image_path: str
         """
         self.image = cv2.imread(filename=image_path)  # , flags=0)
         if self.image is None:
@@ -36,12 +36,87 @@ class ImageCleaner:
             if wait_for_close:
                 cv2.waitKey(0)
 
+    ################
+    # IMAGE SIZING #
+    ################
+
+    def resize_image(self, x, y):
+        """ Changes the size of the image.
+
+        :param x: int; size of the x-axis
+        :param y: int; size of the y-axis
+        :return: None
+        """
+        orig_width = int(self.image.shape[1])
+        orig_height = int(self.image.shape[0])
+        if x < orig_width or y < orig_height:
+            self.image = cv2.resize(src=self.image, dsize=(x, y), interpolation=cv2.INTER_AREA)
+        else:
+            self.image = cv2.resize(src=self.image, dsize=(x, y),
+                                    interpolation=cv2.INTER_CUBIC)  # TODO welche Interpolation ist besser? z80 oder z 81?
+            self.image = cv2.resize(src=self.image, dsize=(x, y), interpolation=cv2.INTER_LINEAR)
+
+    def snip_image(self, x_min, x_max, y_min, y_max):
+        """ Cuts out an image. The result is a cropped image.
+
+        :param x_min: int; start on the x-axis
+        :param x_max: int; end on the x-axis
+        :param y_min: int; start on the y-axis
+        :param y_max: int; end on the y-axis
+        :return: None
+        """
+        self.image = self.image[x_min:x_max, y_min:y_max]
+
+    ####################
+    # POINT OPERATIONS #
+    ####################
+    """
+    Homogeneous point operations are independent of pixel coordinate.
+    Non-homogeneous point operations depend on pixel coordinate.
+    """
+
     def transform_colored_into_gray_img(self):
-        """Changes a color image into a gray value image and overwrites the variable image.
+        """Homogeneous point operation: Changes a color image into a gray value image and overwrites the variable image.
 
         :return: None
         """
         self.image = cv2.cvtColor(self.image, cv2.COLOR_RGB2GRAY)
+
+    def change_color_in_area(self, y_min, y_max, x_min, x_max, blue=0, green=0, red=0):
+        """Non-homogeneous point operation: Changes color in an image area
+
+        y_min, y_max: variables for y-axis; 0 is at top, max is at bottom
+        x_min, x_max: variables for x-axis; 0 is in the left corner, max is on the right side
+        :param y_min: int
+        :param y_max: int
+        :param x_min: int
+        :param x_max: int
+        :param blue: int
+        :param green: int
+        :param red: int
+        :return: None
+        """
+        self.image[y_min:y_max, x_min:x_max] = blue, green, red
+        cv2.imshow('Colorful Area', self.image)
+        cv2.waitKey(0)
+
+    def change_color_in_pixel(self, y, x, blue=0, green=0, red=0):
+        """Non-homogeneous point operation: Changes color only in one pixel.
+
+        :param y: int; variable for y-axis; 0 is at top, max is at bottom.
+        :param x: int; variables for x-axis; 0 is in the left corner, max is on the right side.
+        :param blue: int
+        :param green: int
+        :param red: int
+        :return: None
+        """
+        self.image[y, x] = blue, green, red
+        cv2.imshow('Colorful Pixel', self.image)
+        cv2.waitKey(0)
+
+    ###########
+    # FILTERS #
+    ###########
 
     def add_gaussian_blur(self, kernel_size=(3, 3)):
         """Smooth the image.
@@ -58,7 +133,7 @@ class ImageCleaner:
     def add_average_blur(self, kernel_size=(3, 3)):
         """Calculates the average of the intensity values in the kernel
 
-        :param kernel_size:
+        :param kernel_size: tuple of int
         :return: None
         """
         self.image = cv2.blur(src=self.image, ksize=kernel_size)
@@ -66,19 +141,22 @@ class ImageCleaner:
     def add_median_blur(self, kernel_size=3):
         """
 
-        :param kernel_size:
-        :return:
+        :param kernel_size: tuple of int
+        :return: None
         """
         self.image = cv2.medianBlur(src=self.image, ksize=kernel_size)
 
     def add_bilateral_blur(self, kernel_size=5):
         """
 
-        :param kernel_size:
-        :return:
+        :param kernel_size: tuple of int
+        :return: None
         """
         self.image = cv2.bilateralFilter(src=self.image, d=kernel_size, sigmaSpace=15, sigmaColor=15)
 
+    #########
+    # EDGES #
+    #########
     def apply_canny_filter(self):
         """Places a Filter according to the Canny Edge Algorithm over the image and overwrites the variable image.
 
@@ -122,67 +200,9 @@ class ImageCleaner:
 
         if method == 'CHAIN_APPROX_SIMPLE':
             method = cv2.CHAIN_APPROX_SIMPLE
-        else:       # method == 'CHAIN_APPROX_NONE'
+        else:  # method == 'CHAIN_APPROX_NONE'
             method = cv2.CHAIN_APPROX_NONE
 
-        contours, hierarchies = cv2.findContours(image=self.image, mode=mode, method=method) # image should be a canny image
+        contours, hierarchies = cv2.findContours(image=self.image, mode=mode,
+                                                 method=method)  # image should be a canny image
         return contours, hierarchies
-
-    def resize_image(self, x, y):
-        """ Changes the size of the image.
-
-        :param x: int; size of the x-axis
-        :param y: int; size of the y-axis
-        :return: None
-        """
-        orig_width = int(self.image.shape[1])
-        orig_height = int(self.image.shape[0])
-        if x < orig_width or y < orig_height:
-            self.image = cv2.resize(src=self.image, dsize=(x, y), interpolation=cv2.INTER_AREA)
-        else:
-            self.image = cv2.resize(src=self.image, dsize=(x, y),
-                                    interpolation=cv2.INTER_CUBIC)  # TODO welche Interpolation ist besser? z80 oder z 81?
-            self.image = cv2.resize(src=self.image, dsize=(x, y), interpolation=cv2.INTER_LINEAR)
-
-    def snip_image(self, x_min, x_max, y_min, y_max):
-        """ Cuts out an image. The result is a cropped image.
-
-        :param x_min: int; start on the x-axis
-        :param x_max: int; end on the x-axis
-        :param y_min: int; start on the y-axis
-        :param y_max: int; end on the y-axis
-        :return: None
-        """
-        self.image = self.image[x_min:x_max, y_min:y_max]
-
-    def change_color_in_area(self, y_min, y_max, x_min, x_max, blue=0, green=0, red=0):
-        """Changes color in an image area
-
-        y_min, y_max: variables for y-axis; 0 is at top, max is at bottom
-        x_min, x_max: variables for x-axis; 0 is in the left corner, max is on the right side
-        :param y_min: int
-        :param y_max: int
-        :param x_min: int
-        :param x_max: int
-        :param blue: int
-        :param green: int
-        :param red: int
-        :return: None
-        """
-        self.image[y_min:y_max, x_min:x_max] = blue, green, red
-        cv2.imshow('Colorful Area', self.image)
-        cv2.waitKey(0)
-
-    def change_color_in_pixel(self, y, x, blue=0, green=0, red=0):
-        """Changes color only in one pixel.
-
-        :param y: int; variable for y-axis; 0 is at top, max is at bottom.
-        :param x: int; variables for x-axis; 0 is in the left corner, max is on the right side.
-        :param blue: int
-        :param green: int
-        :param red: int
-        :return: None
-        """
-        self.image[y, x] = blue, green, red
-        cv2.imshow('Colorful Pixel', self.image)
-        cv2.waitKey(0)
