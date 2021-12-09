@@ -27,3 +27,6 @@ class MyTestCase(unittest.TestCase):
         """
         self.assertRaises(AttributeError, self.ic.__init__, 'foo')
 
+
+if __name__ == '__main__':
+    unittest.main()
