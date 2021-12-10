@@ -82,7 +82,7 @@ class ImageCleaner:
         """
         self.image = cv2.cvtColor(self.image, cv2.COLOR_RGB2GRAY)
 
-    def change_color_in_area(self, y_min, y_max, x_min, x_max, blue=0, green=0, red=0):
+    def change_color_in_area(self, y_min, y_max, x_min, x_max, blue=0, green=0, red=255):
         """Non-homogeneous point operation: Changes color in an image area
 
         y_min, y_max: variables for y-axis; 0 is at top, max is at bottom
@@ -97,10 +97,8 @@ class ImageCleaner:
         :return: None
         """
         self.image[y_min:y_max, x_min:x_max] = blue, green, red
-        cv2.imshow('Colorful Area', self.image)
-        cv2.waitKey(0)
 
-    def change_color_in_pixel(self, y, x, blue=0, green=0, red=0):
+    def change_color_in_pixel(self, y, x, blue=0, green=0, red=255):
         """Non-homogeneous point operation: Changes color only in one pixel.
 
         :param y: int; variable for y-axis; 0 is at top, max is at bottom.
@@ -111,8 +109,6 @@ class ImageCleaner:
         :return: None
         """
         self.image[y, x] = blue, green, red
-        cv2.imshow('Colorful Pixel', self.image)
-        cv2.waitKey(0)
 
     ###########
     # FILTERS #
@@ -125,7 +121,7 @@ class ImageCleaner:
         If the noise is also high, then a high ksize is recommended (e.g.: (7,7)).
         If the noise is also low, then a smaller ksize is recommended (e.g.: (3,3)).
         Hint: If the apply_canny_filter() is called after add_gussian_blur, then the noises are removed
-        :param kernel_size: int; TODO
+        :param kernel_size: tuple of int: (number_of_rows, number_of cols)
         :return: None
         """
         self.image = cv2.GaussianBlur(src=self.image, ksize=kernel_size, sigmaX=cv2.BORDER_DEFAULT)
@@ -133,15 +129,15 @@ class ImageCleaner:
     def add_average_blur(self, kernel_size=(3, 3)):
         """Calculates the average of the intensity values in the kernel
 
-        :param kernel_size: tuple of int
+        :param kernel_size: tuple of int: (number_of_rows, number_of cols)
         :return: None
         """
         self.image = cv2.blur(src=self.image, ksize=kernel_size)
 
     def add_median_blur(self, kernel_size=3):
-        """
+        """Calculates the median of the intensity values in the kernel
 
-        :param kernel_size: tuple of int
+        :param kernel_size: tuple of int: (number_of_rows, number_of cols)
         :return: None
         """
         self.image = cv2.medianBlur(src=self.image, ksize=kernel_size)
@@ -149,7 +145,7 @@ class ImageCleaner:
     def add_bilateral_blur(self, kernel_size=5):
         """
 
-        :param kernel_size: tuple of int
+        :param kernel_size: tuple of int: (number_of_rows, number_of cols)
         :return: None
         """
         self.image = cv2.bilateralFilter(src=self.image, d=kernel_size, sigmaSpace=15, sigmaColor=15)
