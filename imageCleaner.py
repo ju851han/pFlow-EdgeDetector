@@ -19,6 +19,48 @@ class ImageCleaner:
         if self.image is None:
             raise AttributeError("Image-file can't be found. The affected image-path is:" + image_path)
 
+    ##########
+    # CHECKS #
+    ##########
+
+    @staticmethod
+    def __check_rgb_values(red, green, blue):
+        """Checks if the value of red, green and blue is valid (int, [0,255]).
+
+        Hint: If red, green and blue is 0 then it will throw an error
+        because these values are used to mark something. If all these are 0 then marking is not possible
+
+        :param red: int
+        :param green: int
+        :param blue: int
+        :return: None
+        """
+        if not isinstance(red, int):
+            raise TypeError("Data type of red must be int.\n"
+                            "Current red value: " + str(red) + "\n"
+                            "Current data type of red: " + str(type(red)))
+        elif not isinstance(green, int):
+            raise TypeError("Data type of green must be int.\n"
+                            "Current green value: " + str(green) + "\n"
+                            "Current data type of green: " + str(type(green)))
+        elif not isinstance(blue, int):
+            raise TypeError("Data type of blue must be int.\n"
+                            "Current blue value: " + str(blue) + "\n"
+                            "Current data type of blue: " + str(type(blue)))
+        elif red < 0 or red > 255:
+            raise ValueError("Value of Red is incorrect. Current red value: " + str(red))
+        elif green < 0 or green > 255:
+            raise ValueError("Value of Green is incorrect. Current green value: " + str(green))
+        elif blue < 0 or blue > 255:
+            raise ValueError("Value of Blue is incorrect. Current blue value: " + str(blue))
+        elif red is 0 and green is 0 and blue is 0:
+            raise AttributeError("The value of red, green and blue is 0.\n"
+                                 "At least one value of red, green or blue must be greater than zero.")
+
+##########
+# OTHERS #
+##########
+
     def show_image(self, scale=1, title='Image', wait_for_close=False):
         """Displays a Picture.
 
@@ -98,6 +140,7 @@ class ImageCleaner:
         :param red: int
         :return: None
         """
+        self.__check_rgb_values(red, green, blue)
         self.image[y_min:y_max, x_min:x_max] = blue, green, red
 
     def change_color_in_pixel(self, y, x, blue=0, green=0, red=255):
@@ -110,6 +153,7 @@ class ImageCleaner:
         :param red: int
         :return: None
         """
+        self.__check_rgb_values(red, green, blue)
         self.image[y, x] = blue, green, red
 
     def apply_simple_threshold(self, thresh=150):
