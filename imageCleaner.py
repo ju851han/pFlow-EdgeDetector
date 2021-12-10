@@ -38,15 +38,15 @@ class ImageCleaner:
         if not isinstance(red, int):
             raise TypeError("Data type of red must be int.\n"
                             "Current red value: " + str(red) + "\n"
-                            "Current data type of red: " + str(type(red)))
+                                                               "Current data type of red: " + str(type(red)))
         elif not isinstance(green, int):
             raise TypeError("Data type of green must be int.\n"
                             "Current green value: " + str(green) + "\n"
-                            "Current data type of green: " + str(type(green)))
+                                                                   "Current data type of green: " + str(type(green)))
         elif not isinstance(blue, int):
             raise TypeError("Data type of blue must be int.\n"
                             "Current blue value: " + str(blue) + "\n"
-                            "Current data type of blue: " + str(type(blue)))
+                                                                 "Current data type of blue: " + str(type(blue)))
         elif red < 0 or red > 255:
             raise ValueError("Value of Red is incorrect. Current red value: " + str(red))
         elif green < 0 or green > 255:
@@ -57,9 +57,11 @@ class ImageCleaner:
             raise AttributeError("The value of red, green and blue is 0.\n"
                                  "At least one value of red, green or blue must be greater than zero.")
 
-##########
-# OTHERS #
-##########
+        # TODO CHECK for ksize, x, y
+
+    ##########
+    # OTHERS #
+    ##########
 
     def show_image(self, scale=1, title='Image', wait_for_close=False):
         """Displays a Picture.
@@ -156,21 +158,38 @@ class ImageCleaner:
         self.__check_rgb_values(red, green, blue)
         self.image[y, x] = blue, green, red
 
-    def apply_simple_threshold(self, thresh=150):
+    def apply_simple_threshold(self, threshold=150):
         """Binaries the image with the simple threshold method.
 
         Precondition: The image must be a gray scale image. If the image shape has more than 2 channels (image.shape)
         then it is a color image.
-        This Method compares each pixel value (=intensity value) of the image with the thresh value.
-        If the pixel value is below the thresh value then the new pixel value is 0.
-        If the pixel value is equals or higher thresh value then the new pixel value is 255.
+        This Method compares each pixel value (=intensity value) of the image with the threshold.
+        If the pixel value is below than threshold then the new pixel value is 0.
+        If the pixel value is equals or higher than threshold then the new pixel value is 255.
         :return: None
         """
         if len(self.image.shape) != 2:
             self.transform_colored_into_gray_img()
 
-        _, thresh = cv2.threshold(src=self.image, thresh=150, maxval=255, type=cv2.THRESH_BINARY)
+        _, thresh = cv2.threshold(src=self.image, thresh=threshold, maxval=255, type=cv2.THRESH_BINARY)
         self.image = thresh
+
+    def apply_adaptive_threshold(self, neighborhood_size=11, offset=0, invert=False):
+        """Finds the optimum threshold by itself and uses this threshold to binarize the image.
+
+        :param neighborhood_size: int; neighborhood size of the kernel size
+                                 (it is needed for calculating the adaptiveMethod for the optimal threshold value)
+        :param offset: int; it is subtracted from the found threshold to fine tune the final threshold.
+        :param invert: bool; Should black and white color be swapped? Yes -> True; No -> False
+        :return: None
+        """
+        if invert:
+            thresh_type = cv2.THRESH_BINARY_INV
+        else:
+            thresh_type = cv2.THRESH_BINARY_INV
+
+        self.image = cv2.adaptiveThreshold(src=self.image, maxValue=255, adaptiveMethod=cv2.ADAPTIVE_THRESH_MEAN_C,
+                                           thresholdType=thresh_type, blockSize=neighborhood_size, C=offset)
 
     ###########
     # FILTERS #
