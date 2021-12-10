@@ -174,9 +174,10 @@ class ImageCleaner:
         _, thresh = cv2.threshold(src=self.image, thresh=threshold, maxval=255, type=cv2.THRESH_BINARY)
         self.image = thresh
 
-    def apply_adaptive_threshold(self, neighborhood_size=11, offset=0, invert=False):
+    def apply_adaptive_threshold(self, neighborhood_size=11, offset=0, invert=False, adaptive_method_name='Gussian'):
         """Finds the optimum threshold by itself and uses this threshold to binarize the image.
 
+        :param adaptive_method_name:
         :param neighborhood_size: int; neighborhood size of the kernel size
                                  (it is needed for calculating the adaptiveMethod for the optimal threshold value)
         :param offset: int; it is subtracted from the found threshold to fine tune the final threshold.
@@ -188,7 +189,15 @@ class ImageCleaner:
         else:
             thresh_type = cv2.THRESH_BINARY_INV
 
-        self.image = cv2.adaptiveThreshold(src=self.image, maxValue=255, adaptiveMethod=cv2.ADAPTIVE_THRESH_MEAN_C,
+        if adaptive_method_name.lower() is 'gussian':
+            adaptive_method = cv2.ADAPTIVE_THRESH_GAUSSIAN_C
+        elif adaptive_method_name.lower() is 'mean':
+            adaptive_method = cv2.ADAPTIVE_THRESH_MEAN_C
+        else:
+            raise AttributeError('The passed value for adaptiveMethod is not valid.\n'
+                                 'Valid values are \'Gussian or Mean\'. Current value is:' + str(adaptive_method_name))
+
+        self.image = cv2.adaptiveThreshold(src=self.image, maxValue=255, adaptiveMethod=adaptive_method,
                                            thresholdType=thresh_type, blockSize=neighborhood_size, C=offset)
 
     ###########
