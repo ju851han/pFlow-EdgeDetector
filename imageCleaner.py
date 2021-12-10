@@ -13,6 +13,8 @@ class ImageCleaner:
         If no flags have been set, the image is colored.
         :param image_path: str
         """
+        if type(image_path) == int:
+            raise TypeError("Image path must be a str! Current image_path is:" + str(image_path))
         self.image = cv2.imread(filename=image_path)  # , flags=0)
         if self.image is None:
             raise AttributeError("Image-file can't be found. The affected image-path is:" + image_path)

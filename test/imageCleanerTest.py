@@ -11,7 +11,7 @@ class MyTestCase(unittest.TestCase):
 
         :return: None
         """
-        self.ic = ImageCleaner('../training_images/Pentagon.png')
+        self.ic = ImageCleaner('../training_images/test/Pentagon.png')
 
     def tearDown(self):
         """ tearDown() is executed AFTER the test has been executed.
@@ -20,12 +20,19 @@ class MyTestCase(unittest.TestCase):
         """
         self.ic = None
 
-    def test_setup(self):
+    def test_init_with_str(self):
         """ Tests if the expected exception is thrown when a non-existent image path is passed to the method
 
         :return: None
         """
         self.assertRaises(AttributeError, self.ic.__init__, 'foo')
+
+    def test_init_with_number(self):
+        """
+
+        :return:
+        """
+        self.assertRaises(TypeError, self.ic.__init__, 123)
 
 
 if __name__ == '__main__':
