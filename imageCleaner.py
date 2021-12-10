@@ -112,8 +112,8 @@ class ImageCleaner:
         """
         self.image[y, x] = blue, green, red
 
-    def apply_simple_threshhold(self, thresh=150):
-        """Binaryizes the image with the simple threshhold method.
+    def apply_simple_threshold(self, thresh=150):
+        """Binaries the image with the simple threshold method.
 
         Precondition: The image must be a gray scale image. If the image shape has more than 2 channels (image.shape)
         then it is a color image.
