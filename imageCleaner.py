@@ -110,6 +110,22 @@ class ImageCleaner:
         """
         self.image[y, x] = blue, green, red
 
+    def apply_simple_threshhold(self, thresh=150):
+        """Binaryizes the image with the simple threshhold method.
+
+        Precondition: The image must be a gray scale image. If the image shape has more than 2 channels (image.shape)
+        then it is a color image.
+        This Method compares each pixel value (=intensity value) of the image with the thresh value.
+        If the pixel value is below the thresh value then the new pixel value is 0.
+        If the pixel value is equals or higher thresh value then the new pixel value is 255.
+        :return: None
+        """
+        if len(self.image.shape) != 2:
+            self.transform_colored_into_gray_img()
+
+        _, thresh = cv2.threshold(src=self.image, thresh=150, maxval=255, type=cv2.THRESH_BINARY)
+        self.image = thresh
+
     ###########
     # FILTERS #
     ###########
