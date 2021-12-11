@@ -74,13 +74,38 @@ for file_name in os.listdir(os.getcwd()):
     if file_name.lower().endswith('.png') or file_name.lower().endswith('.jpg'):
         ic = ImageCleaner(image_path=file_name)
         print(file_name)
-        # ic.show_image(title='Original Image')
+        # ic.show_image(title='Original Image', wait_for_close=False)
+
+        # IMAGE SIZING
+        # ic.resize_image(1300, 610)
+        # ic.snip_image(0, 1300, 0, 610)
+        # ic.show_image(title='Adjusting the Image Size')
+
+        # POINT OPERATIONS
         # ic.transform_colored_into_gray_img()
         # ic.show_image(title='Gray Image', wait_for_close=True)
+        # ic.apply_simple_threshold(threshold=180)
+        # ic.apply_adaptive_threshold(neighborhood_size=51)
+        # ic.change_color_in_area(130, 170, 370, 430, 0, 128, 255)
+        # ic.change_color_in_pixel(5, 5)
+        # ic.show_image(title='Changed Color in Area', wait_for_close=True)
+
+        # FILTERS
         # ic.add_gaussian_blur()
+        # ic.add_average_blur()
+        # ic.add_median_blur()
+        # ic.add_bilateral_blur()
         # ic.show_image(title='Blurred Image')
+
+        # EDGES
         # ic.apply_canny_filter()
         # ic.show_image(title='Canny Image', wait_for_close=True)
+
+        # HISTOGRAM
         ia = ImageAnalyzer(ic.image)
-        ia.plot_histogram(mask=ia.create_round_mask())
+        # ia.plot_histogram(show_hist=False)
+        # ia.plot_histogram(mask=ia.create_round_mask(), show_hist=False)
+        # ia.plot_histogram(ia.create_round_mask(center=(500, 700), radius=350))  # Dog-face
+        ia.show_image()
+
 # pFlowGRID: window_width = "1300" , window_height = "610"
