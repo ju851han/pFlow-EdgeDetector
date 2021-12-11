@@ -130,6 +130,49 @@ class ImageCleaner:
         """
         self.image = cv2.cvtColor(self.image, cv2.COLOR_RGB2GRAY)
 
+    def apply_simple_threshold(self, threshold=150):
+        """Homogeneous point operation: Binaries the image with the simple threshold method.
+
+        Precondition: The image must be a gray scale image. If the image shape has more than 2 channels (image.shape)
+        then it is a color image.
+        This Method compares each pixel value (=intensity value) of the image with the threshold.
+        If the pixel value is below than threshold then the new pixel value is 0.
+        If the pixel value is equals or higher than threshold then the new pixel value is 255.
+        :return: None
+        """
+        if len(self.image.shape) != 2:
+            self.transform_colored_into_gray_img()
+
+        _, thresh = cv2.threshold(src=self.image, thresh=threshold, maxval=255, type=cv2.THRESH_BINARY)
+        self.image = thresh
+
+    def apply_adaptive_threshold(self, neighborhood_size=11, offset=0, invert=False, adaptive_method_name='Gussian'):
+        """Homogeneous point operation: Finds the optimum threshold by itself and uses this threshold to binarize the image.
+
+        :param adaptive_method_name: str; valid strings are 'gussian' and 'mean'
+                                     (Lower- and Upper-case will be ignored)
+        :param neighborhood_size: int; neighborhood size of the kernel size
+                                 (it is needed for calculating the adaptiveMethod for the optimal threshold value)
+        :param offset: int; it is subtracted from the found threshold to fine tune the final threshold.
+        :param invert: bool; Should black and white color be swapped? Yes -> True; No -> False
+        :return: None
+        """
+        if invert:
+            thresh_type = cv2.THRESH_BINARY_INV
+        else:
+            thresh_type = cv2.THRESH_BINARY_INV
+
+        if adaptive_method_name.lower() == 'gussian':
+            adaptive_method = cv2.ADAPTIVE_THRESH_GAUSSIAN_C
+        elif adaptive_method_name.lower() == 'mean':
+            adaptive_method = cv2.ADAPTIVE_THRESH_MEAN_C
+        else:
+            raise AttributeError('The passed value for adaptiveMethod is not valid.\n'
+                                 'Valid values are \'Gussian or Mean\'. Current value is:' + str(adaptive_method_name))
+
+        self.image = cv2.adaptiveThreshold(src=self.image, maxValue=255, adaptiveMethod=adaptive_method,
+                                           thresholdType=thresh_type, blockSize=neighborhood_size, C=offset)
+
     def change_color_in_area(self, y_min, y_max, x_min, x_max, blue=0, green=0, red=255):
         """Non-homogeneous point operation: Changes color in an image area
 
@@ -159,49 +202,6 @@ class ImageCleaner:
         """
         self.__check_rgb_values(red, green, blue)
         self.image[y, x] = red, green, blue
-
-    def apply_simple_threshold(self, threshold=150):
-        """Homogeneous point operations: Binaries the image with the simple threshold method.
-
-        Precondition: The image must be a gray scale image. If the image shape has more than 2 channels (image.shape)
-        then it is a color image.
-        This Method compares each pixel value (=intensity value) of the image with the threshold.
-        If the pixel value is below than threshold then the new pixel value is 0.
-        If the pixel value is equals or higher than threshold then the new pixel value is 255.
-        :return: None
-        """
-        if len(self.image.shape) != 2:
-            self.transform_colored_into_gray_img()
-
-        _, thresh = cv2.threshold(src=self.image, thresh=threshold, maxval=255, type=cv2.THRESH_BINARY)
-        self.image = thresh
-
-    def apply_adaptive_threshold(self, neighborhood_size=11, offset=0, invert=False, adaptive_method_name='Gussian'):
-        """Homogeneous point operations: Finds the optimum threshold by itself and uses this threshold to binarize the image.
-
-        :param adaptive_method_name: str; valid strings are 'gussian' and 'mean'
-                                     (Lower- and Upper-case will be ignored)
-        :param neighborhood_size: int; neighborhood size of the kernel size
-                                 (it is needed for calculating the adaptiveMethod for the optimal threshold value)
-        :param offset: int; it is subtracted from the found threshold to fine tune the final threshold.
-        :param invert: bool; Should black and white color be swapped? Yes -> True; No -> False
-        :return: None
-        """
-        if invert:
-            thresh_type = cv2.THRESH_BINARY_INV
-        else:
-            thresh_type = cv2.THRESH_BINARY_INV
-
-        if adaptive_method_name.lower() == 'gussian':
-            adaptive_method = cv2.ADAPTIVE_THRESH_GAUSSIAN_C
-        elif adaptive_method_name.lower() == 'mean':
-            adaptive_method = cv2.ADAPTIVE_THRESH_MEAN_C
-        else:
-            raise AttributeError('The passed value for adaptiveMethod is not valid.\n'
-                                 'Valid values are \'Gussian or Mean\'. Current value is:' + str(adaptive_method_name))
-
-        self.image = cv2.adaptiveThreshold(src=self.image, maxValue=255, adaptiveMethod=adaptive_method,
-                                           thresholdType=thresh_type, blockSize=neighborhood_size, C=offset)
 
     ###########
     # FILTERS #
