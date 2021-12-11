@@ -1,6 +1,7 @@
 import cv2
 from matplotlib import pyplot as plt
 
+
 class ImageCleaner:
     """Class for Loading and Processing Images (Pictures)
 
@@ -16,6 +17,7 @@ class ImageCleaner:
         if type(image_path) == int:
             raise TypeError("Image path must be a str! Current image_path is:" + str(image_path))
         self.image = cv2.imread(filename=image_path)  # , flags=0)
+        self.image = cv2.cvtColor(self.image, cv2.COLOR_BGR2RGB)
         if self.image is None:
             raise AttributeError("Image-file can't be found. The affected image-path is:" + image_path)
 
@@ -257,6 +259,7 @@ class ImageCleaner:
     """
     
     """
+
     def apply_canny_filter(self):
         """Places a Filter according to the Canny Edge Algorithm over the image and overwrites the variable image.
 

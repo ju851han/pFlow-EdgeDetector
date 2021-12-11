@@ -16,6 +16,16 @@ class ImageAnalyzer:
         if self.image is None:
             raise AttributeError("Image-file can't be found.")
 
+    def show_image(self, name='Image'):
+        """Displays a Picture.
+
+        :param name: name of the window
+        :return: None
+        """
+        plt.figure(name)
+        plt.imshow(X=self.image, cmap="gray" if self.gray else None)
+        plt.show()
+
     def plot_histogram(self, mask=None, show_hist=True):
         """ Displays grayscale or rgb histogramm depending on the image
 
@@ -68,7 +78,7 @@ class ImageAnalyzer:
         plt.xlabel('Bins')
         plt.ylabel('Number of Pixels')
 
-        colors = ('b', 'g', 'r')
+        colors = ('r', 'g', 'b')
         for i, color in enumerate(colors):
             hist = cv2.calcHist(images=[self.image], channels=[i], mask=mask, histSize=[256], ranges=[0, 256])
             plt.plot(hist, color=color)
