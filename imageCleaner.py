@@ -1,5 +1,5 @@
 import cv2
-
+from matplotlib import pyplot as plt
 
 class ImageCleaner:
     """Class for Loading and Processing Images (Pictures)
@@ -190,9 +190,9 @@ class ImageCleaner:
         else:
             thresh_type = cv2.THRESH_BINARY_INV
 
-        if adaptive_method_name.lower() is 'gussian':
+        if adaptive_method_name.lower() == 'gussian':
             adaptive_method = cv2.ADAPTIVE_THRESH_GAUSSIAN_C
-        elif adaptive_method_name.lower() is 'mean':
+        elif adaptive_method_name.lower() == 'mean':
             adaptive_method = cv2.ADAPTIVE_THRESH_MEAN_C
         else:
             raise AttributeError('The passed value for adaptiveMethod is not valid.\n'
