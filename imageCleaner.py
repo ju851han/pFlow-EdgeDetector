@@ -204,11 +204,21 @@ class ImageCleaner:
     ###########
     # FILTERS #
     ###########
+    """
+    A filter smooths the image by adding a blur to it.
+    One reason for using a filter is if the image contains a lot of noise because
+    applying the filter reduces the noises in the image.
+    
+    The parameter ksize is an abbreviation for kernel size which is often used in the blurring methods.
+    The ksize specifies how many pixel-rows and pixel-columns the kernel is large.
+    A kernel is a small matrix which is drawn over the image step by step. 
+    
+    The different blurring methods are described in the respective method.
+    """
 
     def add_gaussian_blur(self, kernel_size=(3, 3)):
-        """Smooth the image.
+        """
 
-        ksize in cv2.GussianBlur() is an abbreviation for kernel size
         If the noise is also high, then a high ksize is recommended (e.g.: (7,7)).
         If the noise is also low, then a smaller ksize is recommended (e.g.: (3,3)).
         Hint: If the apply_canny_filter() is called after add_gussian_blur, then the noises are removed
@@ -244,6 +254,9 @@ class ImageCleaner:
     #########
     # EDGES #
     #########
+    """
+    
+    """
     def apply_canny_filter(self):
         """Places a Filter according to the Canny Edge Algorithm over the image and overwrites the variable image.
 
