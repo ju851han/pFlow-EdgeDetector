@@ -53,7 +53,7 @@ class ImageCleaner:
             raise ValueError("Value of Green is incorrect. Current green value: " + str(green))
         elif blue < 0 or blue > 255:
             raise ValueError("Value of Blue is incorrect. Current blue value: " + str(blue))
-        elif red is 0 and green is 0 and blue is 0:
+        elif red == 0 and green == 0 and blue == 0:
             raise AttributeError("The value of red, green and blue is 0.\n"
                                  "At least one value of red, green or blue must be greater than zero.")
 
