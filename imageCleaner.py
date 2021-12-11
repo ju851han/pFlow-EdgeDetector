@@ -146,9 +146,11 @@ class ImageCleaner:
         _, thresh = cv2.threshold(src=self.image, thresh=threshold, maxval=255, type=cv2.THRESH_BINARY)
         self.image = thresh
 
-    def apply_adaptive_threshold(self, neighborhood_size=11, offset=0, invert=False, adaptive_method_name='Gussian'):
+    def apply_adaptive_threshold(self, neighborhood_size=11, offset=0, invert=False, adaptive_method_name='Mean'):
         """Homogeneous point operation: Finds the optimum threshold by itself and uses this threshold to binarize the image.
 
+        Precondition: The image must be a gray scale image. If the image shape has more than 2 channels (image.shape)
+        then it is a color image.
         :param adaptive_method_name: str; valid strings are 'gussian' and 'mean'
                                      (Lower- and Upper-case will be ignored)
         :param neighborhood_size: int; neighborhood size of the kernel size
@@ -157,10 +159,13 @@ class ImageCleaner:
         :param invert: bool; Should black and white color be swapped? Yes -> True; No -> False
         :return: None
         """
+        if len(self.image.shape) != 2:
+            self.transform_colored_into_gray_img()
+
         if invert:
             thresh_type = cv2.THRESH_BINARY_INV
         else:
-            thresh_type = cv2.THRESH_BINARY_INV
+            thresh_type = cv2.THRESH_BINARY
 
         if adaptive_method_name.lower() == 'gussian':
             adaptive_method = cv2.ADAPTIVE_THRESH_GAUSSIAN_C
