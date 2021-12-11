@@ -145,7 +145,7 @@ class ImageCleaner:
         :return: None
         """
         self.__check_rgb_values(red, green, blue)
-        self.image[y_min:y_max, x_min:x_max] = blue, green, red
+        self.image[y_min:y_max, x_min:x_max] = red, green, blue
 
     def change_color_in_pixel(self, y, x, blue=0, green=0, red=255):
         """Non-homogeneous point operation: Changes color only in one pixel.
@@ -158,7 +158,7 @@ class ImageCleaner:
         :return: None
         """
         self.__check_rgb_values(red, green, blue)
-        self.image[y, x] = blue, green, red
+        self.image[y, x] = red, green, blue
 
     def apply_simple_threshold(self, threshold=150):
         """Homogeneous point operations: Binaries the image with the simple threshold method.
