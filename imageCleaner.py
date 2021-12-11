@@ -159,7 +159,7 @@ class ImageCleaner:
         self.image[y, x] = blue, green, red
 
     def apply_simple_threshold(self, threshold=150):
-        """Binaries the image with the simple threshold method.
+        """Homogeneous point operations: Binaries the image with the simple threshold method.
 
         Precondition: The image must be a gray scale image. If the image shape has more than 2 channels (image.shape)
         then it is a color image.
@@ -175,9 +175,10 @@ class ImageCleaner:
         self.image = thresh
 
     def apply_adaptive_threshold(self, neighborhood_size=11, offset=0, invert=False, adaptive_method_name='Gussian'):
-        """Finds the optimum threshold by itself and uses this threshold to binarize the image.
+        """Homogeneous point operations: Finds the optimum threshold by itself and uses this threshold to binarize the image.
 
-        :param adaptive_method_name:
+        :param adaptive_method_name: str; valid strings are 'gussian' and 'mean'
+                                     (Lower- and Upper-case will be ignored)
         :param neighborhood_size: int; neighborhood size of the kernel size
                                  (it is needed for calculating the adaptiveMethod for the optimal threshold value)
         :param offset: int; it is subtracted from the found threshold to fine tune the final threshold.
