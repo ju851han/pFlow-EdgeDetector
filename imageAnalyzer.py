@@ -23,7 +23,10 @@ class ImageAnalyzer:
         :return: None
         """
         plt.figure(name)
-        plt.imshow(X=self.image, cmap="gray" if self.gray else None)
+        if self.gray:
+            plt.imshow(X=self.image, cmap="gray", vmin=0, vmax=255)
+        else:
+            plt.imshow(X=self.image)
         plt.show()
 
     def plot_histogram(self, mask=None, show_hist=True):
@@ -47,11 +50,11 @@ class ImageAnalyzer:
         :return:None
         """
         hist = cv2.calcHist([self.image], [0], mask, [256], [0, 256])
-        plt.figure()    # create new window for histogram
+        plt.figure('Grayscale Histogram')    # create new window for histogram
         plt.title('Grayscale Histogram')
         plt.xlabel('Bins')
         plt.ylabel('Number of Pixels')
-        plt.plot(hist)
+        plt.plot(hist, color='black')
         plt.xlim([0, 256])
 
     def create_round_mask(self):
@@ -73,7 +76,7 @@ class ImageAnalyzer:
         :param mask: mask; The mask helps to find out which intensity values are in the selected area
         :return: None
         """
-        plt.figure()    # create new window for histogram
+        plt.figure('RGB Histogram')    # create new window for histogram
         plt.title('RGB Histogram')
         plt.xlabel('Bins')
         plt.ylabel('Number of Pixels')
