@@ -57,19 +57,6 @@ class ImageAnalyzer:
         plt.plot(hist, color='black')
         plt.xlim([0, 256])
 
-    def create_round_mask(self):
-        """ Creates a focus-circle in the middle of the image.
-
-        Usage: The mask helps to find out which intensity values are in the circled area.
-        :return: mask
-        """
-        blank = np.zeros(self.image.shape[:2], dtype='uint8')
-        circle = cv2.circle(img=blank, center=(self.image.shape[1] // 2, self.image.shape[0] // 2), radius=100,
-                            color=255, thickness=-1)
-        # cv2.imshow('Mask', cv2.bitwise_and(src1=self.image, src2=self.image, mask=circle))
-        # cv2.waitKey(0)
-        return circle
-
     def __plot_rgb_histogram(self, mask=None):
         """ Displays the red, green, blue parts of the intensity values in an image.
 
@@ -87,3 +74,16 @@ class ImageAnalyzer:
             plt.plot(hist, color=color)
 
         plt.xlim([0, 256])
+
+    def create_round_mask(self):
+        """ Creates a focus-circle in the middle of the image.
+
+        Usage: The mask helps to find out which intensity values are in the circled area.
+        :return: mask
+        """
+        blank = np.zeros(self.image.shape[:2], dtype='uint8')
+        circle = cv2.circle(img=blank, center=(self.image.shape[1] // 2, self.image.shape[0] // 2), radius=100,
+                            color=255, thickness=-1)
+        # cv2.imshow('Mask', cv2.bitwise_and(src1=self.image, src2=self.image, mask=circle))
+        # cv2.waitKey(0)
+        return circle
