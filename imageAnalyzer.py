@@ -75,15 +75,23 @@ class ImageAnalyzer:
 
         plt.xlim([0, 256])
 
-    def create_round_mask(self):
+    def create_round_mask(self, center=None, radius=100):
         """ Creates a focus-circle in the middle of the image.
 
         Usage: The mask helps to find out which intensity values are in the circled area.
+        :param center: tuple of int ( x-coordinate, y-coordinate) for mask
+                        if it is None then the masked is placed in the middle of the image.
+        :param radius: int; radius for mask
         :return: mask
         """
+        if center is None:
+            center = (self.image.shape[1] // 2, self.image.shape[0] // 2)
+
         blank = np.zeros(self.image.shape[:2], dtype='uint8')
-        circle = cv2.circle(img=blank, center=(self.image.shape[1] // 2, self.image.shape[0] // 2), radius=100,
+        circle = cv2.circle(img=blank, center=center, radius=radius,
                             color=255, thickness=-1)
         # cv2.imshow('Mask', cv2.bitwise_and(src1=self.image, src2=self.image, mask=circle))
         # cv2.waitKey(0)
+        plt.imshow(cv2.bitwise_and(src1=self.image, src2=self.image, mask=circle))
+        plt.show()
         return circle
