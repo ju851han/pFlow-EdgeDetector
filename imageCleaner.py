@@ -1,4 +1,5 @@
 import cv2
+import numpy as np
 from matplotlib import pyplot as plt
 
 
@@ -276,22 +277,53 @@ class ImageCleaner:
         self.image = cv2.bilateralFilter(src=self.image, d=kernel_size, sigmaSpace=sigma_space, sigmaColor=sigma_color)
 
     def add_edge_preserving_filter(self):       #TODO ggf. ansehen
+        """Real-Time Edge-Preserving Denoising Filter
+        Usage for Non-Photorealistic Rendering
+
+        :return: None
+        """
         self.image = cv2.edgePreservingFilter(src=self.image)
 
-    #########
-    # EDGES #
-    #########
-    """
-    
+    ######################
+    # EDGES AND CONTOURS #
+    ######################
+    """ Compute Edges in an image
     """
 
-    def apply_canny_filter(self):
-        """Places a Filter according to the Canny Edge Algorithm over the image and overwrites the variable image.
+    def apply_canny_filter(self, threshold1=125, threshold2=175):
+        """Places a filter according to the Canny Edge Algorithm over the image and overwrites the variable image.
 
         Hint: If a blurred image is passed, then fewer edges are detected.
         :return: None
         """
-        self.image = cv2.Canny(image=self.image, threshold1=125, threshold2=175)  # TODO threshhold bestimmen
+        if len(self.image.shape) != 2:
+            self.transform_colored_into_gray_img()
+
+        self.image = cv2.Canny(image=self.image, threshold1=threshold1, threshold2=threshold2)  # TODO threshhold bestimmen
+
+    def apply_laplacian(self):
+        """
+
+        :return: None
+        """
+        if len(self.image.shape) != 2:
+            self.transform_colored_into_gray_img()
+
+        lap = cv2.Laplacian(self.image, cv2.CV_64F)
+        self.image = np.uint8(np.absolute(lap))
+
+    def apply_sobel(self):
+        """
+
+        :return:
+        """
+        if len(self.image.shape) != 2:
+            self.transform_colored_into_gray_img()
+
+        sobel_x = cv2.Sobel(src=self.image, ddepth=cv2.CV_64F, dx=1, dy=0)
+        sobel_y = cv2.Sobel(src=self.image, ddepth=cv2.CV_64F, dx=0, dy=1)
+        combined_sobel = cv2.bitwise_or(sobel_x, sobel_y)
+        self.image = combined_sobel
 
     def dilating_image(self, kernel_size=(3, 3), number_of_iterations=1):
         """Expands Pixel
@@ -311,11 +343,14 @@ class ImageCleaner:
         """
         self.image = cv2.erode(self.image, kernel=kernel_size, iterations=number_of_iterations)
 
-    def identify_contours_and_hierarchies(self, mode='all hierarchic contours', method='CHAIN_APPROX_NONE'):
+    def identify_contours_and_hierarchies(self, mode='all hierarchic contours', method='CHAIN_APPROX_NONE',
+                                          canny_threshold1=125, canny_threshold2=175):
         """
 
-        :param method:
-        :param mode:
+        :param canny_threshold2: int;
+        :param canny_threshold1: int;
+        :param method: str;
+        :param mode: str;
         :return: contours is list of all the contours which are found in the image
              hierarchies contains information about the image topology
         """
@@ -326,11 +361,11 @@ class ImageCleaner:
         else:  # all contours
             mode = cv2.RETR_LIST
 
-        if method == 'CHAIN_APPROX_SIMPLE':
+        if method == 'CHAIN_APPROX_SIMPLE':     # compresses all the contours that are returned
             method = cv2.CHAIN_APPROX_SIMPLE
         else:  # method == 'CHAIN_APPROX_NONE'
             method = cv2.CHAIN_APPROX_NONE
 
-        contours, hierarchies = cv2.findContours(image=self.image, mode=mode,
+        contours, hierarchies = cv2.findContours(image=self.apply_canny_filter(threshold1=canny_threshold1, threshold2=canny_threshold2), mode=mode,
                                                  method=method)  # image should be a canny image
         return contours, hierarchies
