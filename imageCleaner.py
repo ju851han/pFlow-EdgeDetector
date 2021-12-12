@@ -217,46 +217,66 @@ class ImageCleaner:
     applying the filter reduces the noises in the image.
     
     The parameter ksize is an abbreviation for kernel size which is often used in the blurring methods.
-    The ksize specifies how many pixel-rows and pixel-columns the kernel is large.
+    The kernel size specifies how many pixel-rows and pixel-columns the kernel is large.
     A kernel is a small matrix which is drawn over the image step by step. 
+    The hot spot is the middle pixel of the kernel.
     
     The different blurring methods are described in the respective method.
     """
 
-    def add_gaussian_blur(self, kernel_size=(3, 3)):
-        """
+    def add_gaussian_blur(self, kernel_size=(3, 3), sigma_x=2):
+        """ Calculates the weight from the pixels in the kernel
+            - how often the intensity values occur in the surrounding pixels and the hot spot at the kernel.
+            The product of the weight is the new pixel value of the hot spot.
 
-        If the noise is also high, then a high ksize is recommended (e.g.: (7,7)).
-        If the noise is also low, then a smaller ksize is recommended (e.g.: (3,3)).
-        Hint: If the apply_canny_filter() is called after add_gussian_blur, then the noises are removed
+        The Gaussian Blur is the most popular blurring method.
+        If the noise is also high, then a high kernel size is recommended (e.g.: (7,7)).
+        If the noise is also low, then a smaller kernel size is recommended (e.g.: (3,3)).
+        Hint: If the apply_canny_filter() is called after add_gaussian_blur(), then the noises are removed
         :param kernel_size: tuple of int: (number_of_rows, number_of cols)
+        :param sigma_x: int; width of the gaussian bell
+                If the value is large, then the image is strongly smoothed.
+                If the value is small, then the image is less smoothed.
         :return: None
         """
-        self.image = cv2.GaussianBlur(src=self.image, ksize=kernel_size, sigmaX=cv2.BORDER_DEFAULT)
+        self.image = cv2.GaussianBlur(src=self.image, ksize=kernel_size, sigmaX=sigma_x)
 
     def add_average_blur(self, kernel_size=(3, 3)):
-        """Calculates the average of the intensity values in the kernel
+        """Calculates the average of the intensity values from the pixels in the kernel.
+        The result is the new pixel value of the hot spot.
 
+        Synonym: box filter
         :param kernel_size: tuple of int: (number_of_rows, number_of cols)
         :return: None
         """
         self.image = cv2.blur(src=self.image, ksize=kernel_size)
 
     def add_median_blur(self, kernel_size=3):
-        """Calculates the median of the intensity values in the kernel
+        """Calculates the median of the intensity values from the pixels in the kernel.
+        The result is the new pixel value of the hot spot.
 
+        Hint: This method tends to be more effective in reducing noise in an image than average and gussian blur
+         TODO but it is usually not used for a high kernel size (e.g. (5,5) or (7,7))
         :param kernel_size: tuple of int: (number_of_rows, number_of cols)
         :return: None
         """
         self.image = cv2.medianBlur(src=self.image, ksize=kernel_size)
 
-    def add_bilateral_blur(self, kernel_size=5):
-        """
+    def add_bilateral_blur(self, kernel_size=5, sigma_color=15, sigma_space=15):
+        """ Unlike the other methods this method also blurs the image but it does not make the edges less sharp.
 
+        That is why it is the most effective blurring method.
         :param kernel_size: tuple of int: (number_of_rows, number_of cols)
+        :param sigma_color: int; if it is a high number, then many different colors are in the surrounding pixels
+                            which are noted when applying bilateral blur.
+        :param sigma_space: int; Larger values for this sigma space mean that pixels further away from the hot spot
+                            affect the blur calculation.
         :return: None
         """
-        self.image = cv2.bilateralFilter(src=self.image, d=kernel_size, sigmaSpace=15, sigmaColor=15)
+        self.image = cv2.bilateralFilter(src=self.image, d=kernel_size, sigmaSpace=sigma_space, sigmaColor=sigma_color)
+
+    def add_edge_preserving_filter(self):       #TODO ggf. ansehen
+        self.image = cv2.edgePreservingFilter(src=self.image)
 
     #########
     # EDGES #
@@ -268,7 +288,7 @@ class ImageCleaner:
     def apply_canny_filter(self):
         """Places a Filter according to the Canny Edge Algorithm over the image and overwrites the variable image.
 
-        Hint: If a blurred image is passed, then fewer edges are detected
+        Hint: If a blurred image is passed, then fewer edges are detected.
         :return: None
         """
         self.image = cv2.Canny(image=self.image, threshold1=125, threshold2=175)  # TODO threshhold bestimmen
