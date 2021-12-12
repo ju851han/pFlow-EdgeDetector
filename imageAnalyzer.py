@@ -16,10 +16,11 @@ class ImageAnalyzer:
         if self.image is None:
             raise AttributeError("Image-file can't be found.")
 
-    def show_image(self, name='Image'):
+    def show_image(self, name='Image', show_now=True):
         """Displays a Picture.
 
-        :param name: name of the window
+        :param name: str; name of the window
+        :param show_now: bool; If it is True, then the image is shown.
         :return: None
         """
         plt.figure(name)
@@ -27,7 +28,8 @@ class ImageAnalyzer:
             plt.imshow(X=self.image, cmap="gray", vmin=0, vmax=255)
         else:
             plt.imshow(X=self.image)
-        plt.show()
+        if show_now:
+            plt.show()
 
     def plot_histogram(self, mask=None, show_hist=True):
         """ Displays grayscale or rgb histogramm depending on the image
