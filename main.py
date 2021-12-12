@@ -73,8 +73,10 @@ os.chdir('training_images')
 for file_name in os.listdir(os.getcwd()):
     if file_name.lower().endswith('.png') or file_name.lower().endswith('.jpg'):
         ic = ImageCleaner(image_path=file_name)
+        ia = ImageAnalyzer(ic.image)
         print(file_name)
         # ic.show_image(title='Original Image', wait_for_close=False)
+        ia.show_image('Original Image', False)
 
         # IMAGE SIZING
         # ic.resize_image(1300, 610)
@@ -82,8 +84,10 @@ for file_name in os.listdir(os.getcwd()):
         # ic.show_image(title='Adjusting the Image Size')
 
         # POINT OPERATIONS
-        # ic.transform_colored_into_gray_img()
+        ic.transform_colored_into_gray_img()
         # ic.show_image(title='Gray Image', wait_for_close=True)
+        ia = ImageAnalyzer(ic.image)
+        ia.show_image(name='Grayscale Image', show_now=False)
         # ic.apply_simple_threshold(threshold=180)
         # ic.apply_adaptive_threshold(neighborhood_size=51)
         # ic.change_color_in_area(130, 170, 370, 430, 0, 128, 255)
@@ -91,21 +95,59 @@ for file_name in os.listdir(os.getcwd()):
         # ic.show_image(title='Changed Color in Area', wait_for_close=True)
 
         # FILTERS
-        # ic.add_gaussian_blur()
-        # ic.add_average_blur()
-        # ic.add_median_blur()
-        # ic.add_bilateral_blur()
+        ic.add_gaussian_blur((5, 5))
+        # ia = ImageAnalyzer(ic.image)
+        # ia.show_image(name='Gussian Blurred Image', show_now=False)
+
+        # ic = ImageCleaner(image_path=file_name)
+        # ic.transform_colored_into_gray_img()
+        ic.add_average_blur(kernel_size=(5, 5))
+        # ia = ImageAnalyzer(ic.image)
+        # ia.show_image(name='Average Blurred Image', show_now=False)
+
+        # ic = ImageCleaner(image_path=file_name)
+        # ic.transform_colored_into_gray_img()
+        ic.add_bilateral_blur()
+        # ia = ImageAnalyzer(ic.image)
+        # ia.show_image(name='Bilateral Blurred Image', show_now=False)
+
+        # ic = ImageCleaner(image_path=file_name)
+        # ic.transform_colored_into_gray_img()
+        ic.add_median_blur()
+        # ia = ImageAnalyzer(ic.image)
+        # ia.show_image(name='Median Blurred Image', show_now=False)
+
+        # ic = ImageCleaner(image_path=file_name)
+        # ic.transform_colored_into_gray_img()
+        ic.add_edge_preserving_filter()
+        # ia = ImageAnalyzer(ic.image)
+        # ia.show_image(name='Edge Preserving Filtered Image', show_now=True)
         # ic.show_image(title='Blurred Image')
 
-        # EDGES
+        # ic.apply_simple_threshold(130)
+        # ic.apply_adaptive_threshold(neighborhood_size=81)
+        # ia = ImageAnalyzer(ic.image)
+        # ia.show_image(name='Smoothed Image', contrast_auto=True)
+
+        # EDGES AND CONTOURS
         # ic.apply_canny_filter()
-        # ic.show_image(title='Canny Image', wait_for_close=True)
+        # ia = ImageAnalyzer(ic.image)
+        # ia.show_image(name='Canny Image')
+
+        ic.apply_laplacian()
+        ia = ImageAnalyzer(ic.image)
+        ia.show_image(name='Laplacian Image', contrast_auto=True)
+        # ic.show_image(title='Edge Image', wait_for_close=True)
+
+        # ic.apply_sobel()
+        # ia = ImageAnalyzer(ic.image)
+        # ia.show_image(name='Sobel Image', contrast_auto=True)
 
         # HISTOGRAM
-        ia = ImageAnalyzer(ic.image)
+        # ia = ImageAnalyzer(ic.image)
         # ia.plot_histogram(show_hist=False)
         # ia.plot_histogram(mask=ia.create_round_mask(), show_hist=False)
         # ia.plot_histogram(ia.create_round_mask(center=(500, 700), radius=350))  # Dog-face
-        ia.show_image()
+        # ia.show_image()
 
 # pFlowGRID: window_width = "1300" , window_height = "610"
