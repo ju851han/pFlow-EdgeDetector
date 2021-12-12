@@ -16,16 +16,20 @@ class ImageAnalyzer:
         if self.image is None:
             raise AttributeError("Image-file can't be found.")
 
-    def show_image(self, name='Image', show_now=True):
+    def show_image(self, name='Image', show_now=True, contrast_auto=False):
         """Displays a Picture.
 
+        :param contrast_auto: bool; If it is True then the contrast is maximized.
         :param name: str; name of the window
         :param show_now: bool; If it is True, then the image is shown.
         :return: None
         """
         plt.figure(name)
         if self.gray:
-            plt.imshow(X=self.image, cmap="gray", vmin=0, vmax=255)
+            if contrast_auto:
+                plt.imshow(X=self.image, cmap="gray")
+            else:
+                plt.imshow(X=self.image, cmap="gray", vmin=0, vmax=255)
         else:
             plt.imshow(X=self.image)
         if show_now:
