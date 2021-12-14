@@ -179,6 +179,24 @@ class ImageCleaner:
         self.image = cv2.adaptiveThreshold(src=self.image, maxValue=255, adaptiveMethod=adaptive_method,
                                            thresholdType=thresh_type, blockSize=neighborhood_size, C=offset)
 
+    def invert_image(self):
+        """Homogeneous point operation: Turns the picture upside down.
+
+        :return:None
+        """
+        self.image = cv2.rotate(self.image, cv2.ROTATE_180)
+
+    def rotate_image(self, rotation_degrees=45):
+        """Turns an image by the given degrees of rotation around the center of the image.
+
+        :param rotation_degrees: int; = angle that indicates by how much the image is rotated
+        :return: None
+        """
+        (height, weight) = self.image.shape[:2]
+        (x, y) = (weight // 2, height // 2)
+        matrix = cv2.getRotationMatrix2D((x, y), rotation_degrees, 1.0)
+        self.image = cv2.warpAffine(self.image, matrix, (weight, height))
+
     def change_color_in_area(self, y_min, y_max, x_min, x_max, blue=0, green=0, red=255):
         """Non-homogeneous point operation: Changes color in an image area
 
