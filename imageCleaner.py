@@ -251,7 +251,12 @@ def change_color_in_area(image, y_min, y_max, x_min, x_max, blue=0, green=0, red
     :return: image
     """
     __check_rgb_values(red, green, blue)
-    image[y_min:y_max, x_min:x_max] = red, green, blue
+
+    if 2 == len(image.shape):   # check if image is gray then only variable red is considered
+        image[y_min:y_max, x_min:x_max] = red
+    else:
+        image[y_min:y_max, x_min:x_max] = red, green, blue
+    return image
 
 
 def change_color_in_pixel(image, y, x, blue=0, green=0, red=255):
