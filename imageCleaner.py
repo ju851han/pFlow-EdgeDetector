@@ -130,10 +130,11 @@ def apply_simple_threshold(image, threshold=150):
     If the pixel value is below than threshold then the new pixel value is 0.
     If the pixel value is equals or higher than threshold then the new pixel value is 255.
     :param image: image
+    :param threshold: int
     :return: image
     """
     if len(image.shape) != 2:
-        transform_colored_into_gray_img()
+        transform_colored_into_gray_img(image)
 
     _, thresh = cv2.threshold(src=image, thresh=threshold, maxval=255, type=cv2.THRESH_BINARY)
     return thresh
@@ -145,7 +146,7 @@ def apply_adaptive_threshold(image, neighborhood_size=11, offset=0, invert=False
     Precondition: The image must be a gray scale image. If the image shape has more than 2 channels (image.shape)
     then it is a color image.
     :param image: image
-    :param adaptive_method_name: str; valid strings are 'gussian' and 'mean'
+    :param adaptive_method_name: str; valid strings are 'gaussian' and 'mean'
                                  (Lower- and Upper-case will be ignored)
     :param neighborhood_size: int; neighborhood size of the kernel size
                              (it is needed for calculating the adaptiveMethod for the optimal threshold value)
@@ -161,13 +162,13 @@ def apply_adaptive_threshold(image, neighborhood_size=11, offset=0, invert=False
     else:
         thresh_type = cv2.THRESH_BINARY
 
-    if adaptive_method_name.lower() == 'gussian':
+    if adaptive_method_name.lower() == 'gaussian':
         adaptive_method = cv2.ADAPTIVE_THRESH_GAUSSIAN_C
     elif adaptive_method_name.lower() == 'mean':
         adaptive_method = cv2.ADAPTIVE_THRESH_MEAN_C
     else:
         raise AttributeError('The passed value for adaptiveMethod is not valid.\n'
-                             'Valid values are \'Gussian or Mean\'. Current value is:' + str(adaptive_method_name))
+                             'Valid values are \'Gaussian or Mean\'. Current value is:' + str(adaptive_method_name))
 
     return cv2.adaptiveThreshold(src=image, maxValue=255, adaptiveMethod=adaptive_method,
                                  thresholdType=thresh_type, blockSize=neighborhood_size, C=offset)
@@ -313,12 +314,12 @@ def eroding_image(image, kernel_size=(3, 3), number_of_iterations=1):
 
 
 def add_bilateral_blur(image, kernel_size=5, sigma_color=15, sigma_space=15):
-    """ Unlike the other methods this method also blurs the image but it does not make the edges less sharp.
+    """ Unlike the other methods this method also blurs the image, but it does not make the edges less sharp.
 
     That is why it is the most effective blurring method.
     :param image: image
     :param kernel_size: tuple of int: (number_of_rows, number_of cols)
-    :param sigma_color: int; if it is a high number, then many different colors are in the surrounding pixels
+    :param sigma_color: int; if it is a high number, then different colors are in the surrounding pixels
                         which are noted when applying bilateral blur.
     :param sigma_space: int; Larger values for this sigma space mean that pixels further away from the hot spot
                         affect the blur calculation.
@@ -338,16 +339,18 @@ def add_edge_preserving_filter(image):  # TODO ggf. ansehen
 
 
 def apply_canny_filter(image, threshold1=125, threshold2=175):
-    """Edge Filter: Places a filter according to the Canny Edge Algorithm over the image and overwrites the variable image.
+    """Edge Filter: Places a filter according to the Canny Edge Algorithm over the image and returns  an image.
 
     Hint: If a blurred image is passed, then fewer edges are detected.
+    :param threshold2:
+    :param threshold1:
     :param image: image
     :return: image
     """
     if len(image.shape) != 2:
         image = transform_colored_into_gray_img(image)
 
-    return cv2.Canny(image=image, threshold1=threshold1, threshold2=threshold2)  # TODO threshhold bestimmen
+    return cv2.Canny(image=image, threshold1=threshold1, threshold2=threshold2)  # TODO threshold bestimmen
 
 
 def apply_laplacian(image):
@@ -371,7 +374,7 @@ def apply_sobel(image):
     :return:
     """
     if len(image.shape) != 2:
-        transform_colored_into_gray_img()
+        transform_colored_into_gray_img(image)
 
     sobel_x = cv2.Sobel(src=image, ddepth=cv2.CV_64F, dx=1, dy=0)
     sobel_y = cv2.Sobel(src=image, ddepth=cv2.CV_64F, dx=0, dy=1)
@@ -383,6 +386,7 @@ def identify_contours_and_hierarchies(image, mode='all hierarchic contours', met
                                       canny_threshold1=125, canny_threshold2=175):
     """
 
+    :param image: image
     :param canny_threshold2: int;
     :param canny_threshold1: int;
     :param method: str;
