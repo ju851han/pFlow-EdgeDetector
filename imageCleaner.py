@@ -1,3 +1,5 @@
+import os.path
+
 import cv2
 import numpy as np
 
@@ -57,6 +59,8 @@ def load_image(image_path):
     """
     if type(image_path) == int:
         raise TypeError("Image path must be a str! Current image_path is:" + str(image_path))
+    if not os.path.exists(image_path):
+        raise FileNotFoundError("File was not found. The searched image_path is: {}".format(image_path))
     image = cv2.imread(filename=image_path)  # , flags=0)
     image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
     if image is None:
@@ -119,6 +123,18 @@ def snip_image(image, x_min, x_max, y_min, y_max):
     return image[x_min:x_max, y_min:y_max]
 
 
+def rotate_image(image, rotation_degrees=45):
+    """Turns an image by the given degrees of rotation around the center of the image.
+
+    :param image: image
+    :param rotation_degrees: int; = angle that indicates by how much the image is rotated
+    :return: image
+    """
+    (height, weight) = image.shape[:2]
+    (x, y) = (weight // 2, height // 2)
+    matrix = cv2.getRotationMatrix2D((x, y), rotation_degrees, 1.0)
+    return cv2.warpAffine(image, matrix, (weight, height))
+
 ####################
 # POINT OPERATIONS #
 ####################
@@ -139,6 +155,8 @@ def transform_image_to_grayscale(image_path):
     """
     if type(image_path) == int:
         raise TypeError("Image path must be a str! Current image_path is:" + str(image_path))
+    if not os.path.exists(image_path):
+        raise FileNotFoundError("File was not found. The searched image_path is: {}".format(image_path))
     image = cv2.imread(filename=image_path)  # , flags=0)
     image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     if image is None:
@@ -215,19 +233,6 @@ def invert_image(image):
     :return:image
     """
     return cv2.rotate(image, cv2.ROTATE_180)
-
-
-def rotate_image(image, rotation_degrees=45):
-    """Turns an image by the given degrees of rotation around the center of the image.
-
-    :param image: image
-    :param rotation_degrees: int; = angle that indicates by how much the image is rotated
-    :return: image
-    """
-    (height, weight) = image.shape[:2]
-    (x, y) = (weight // 2, height // 2)
-    matrix = cv2.getRotationMatrix2D((x, y), rotation_degrees, 1.0)
-    return cv2.warpAffine(image, matrix, (weight, height))
 
 
 def change_color_in_area(image, y_min, y_max, x_min, x_max, blue=0, green=0, red=255):
