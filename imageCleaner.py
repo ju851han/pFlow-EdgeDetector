@@ -112,13 +112,31 @@ Non-homogeneous point operations depend on pixel coordinate.
 """
 
 
-def transform_colored_into_gray_img(image):
+def transform_colored_into_grayscale_img(image):
     """Homogeneous point operation: Changes a color image into a grayscale-image and overwrites the variable image.
 
     :param image: image
     :return: image
     """
     return cv2.cvtColor(image, cv2.COLOR_RGB2GRAY)
+
+
+def transform_image_to_grayscale(image_path):
+    """Transforms an image to grayscale-image.
+
+    flags=0 in cv2.imread()-method means that the passed image is transformed as a gray value image.
+    If no flags have been set, the image is colored.
+    :param image_path: str
+    :return: grayscale-image
+
+    """
+    if type(image_path) == int:
+        raise TypeError("Image path must be a str! Current image_path is:" + str(image_path))
+    image = cv2.imread(filename=image_path)  # , flags=0)
+    image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+    if image is None:
+        raise AttributeError("Image-file can't be found. The affected image-path is:" + image_path)
+    return image
 
 
 def apply_simple_threshold(image, threshold=150):
