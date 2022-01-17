@@ -112,15 +112,6 @@ Non-homogeneous point operations depend on pixel coordinate.
 """
 
 
-def transform_colored_into_grayscale_img(image):
-    """Homogeneous point operation: Changes a color image into a grayscale-image and overwrites the variable image.
-
-    :param image: image
-    :return: image
-    """
-    return cv2.cvtColor(image, cv2.COLOR_RGB2GRAY)
-
-
 def transform_image_to_grayscale(image_path):
     """Transforms an image to grayscale-image.
 
@@ -139,6 +130,15 @@ def transform_image_to_grayscale(image_path):
     return image
 
 
+def transform_colored_into_grayscale_img(image):
+    """Homogeneous point operation: Changes a color image into a grayscale-image and overwrites the variable image.
+
+    :param image: image
+    :return: image
+    """
+    return cv2.cvtColor(image, cv2.COLOR_RGB2GRAY)
+
+
 def apply_simple_threshold(image, threshold=150):
     """Homogeneous point operation: Binaries the image with the simple threshold method.
 
@@ -152,7 +152,7 @@ def apply_simple_threshold(image, threshold=150):
     :return: image
     """
     if len(image.shape) != 2:
-        transform_colored_into_gray_img(image)
+        transform_colored_into_grayscale_img(image)
 
     _, thresh = cv2.threshold(src=image, thresh=threshold, maxval=255, type=cv2.THRESH_BINARY)
     return thresh
@@ -173,7 +173,7 @@ def apply_adaptive_threshold(image, neighborhood_size=11, offset=0, invert=False
     :return: image
     """
     if len(image.shape) != 2:
-        image = transform_colored_into_gray_img(image)
+        image = transform_image_to_grayscale(image)
 
     if invert:
         thresh_type = cv2.THRESH_BINARY_INV
@@ -366,7 +366,7 @@ def apply_canny_filter(image, threshold1=125, threshold2=175):
     :return: image
     """
     if len(image.shape) != 2:
-        image = transform_colored_into_gray_img(image)
+        image = transform_colored_into_grayscale_img(image)
 
     return cv2.Canny(image=image, threshold1=threshold1, threshold2=threshold2)  # TODO threshold bestimmen
 
@@ -378,7 +378,7 @@ def apply_laplacian(image):
     :return: image
     """
     if len(image.shape) != 2:
-        image = transform_colored_into_gray_img(image)
+        image = transform_colored_into_grayscale_img(image)
 
     lap = cv2.Laplacian(image, cv2.CV_64F)
     return np.uint8(np.absolute(lap))
@@ -392,7 +392,7 @@ def apply_sobel(image):
     :return:
     """
     if len(image.shape) != 2:
-        transform_colored_into_gray_img(image)
+        transform_colored_into_grayscale_img(image)
 
     sobel_x = cv2.Sobel(src=image, ddepth=cv2.CV_64F, dx=1, dy=0)
     sobel_y = cv2.Sobel(src=image, ddepth=cv2.CV_64F, dx=0, dy=1)
