@@ -124,7 +124,7 @@ def transform_image_to_grayscale(image_path):
     if type(image_path) == int:
         raise TypeError("Image path must be a str! Current image_path is:" + str(image_path))
     image = cv2.imread(filename=image_path)  # , flags=0)
-    image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+    image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     if image is None:
         raise AttributeError("Image-file can't be found. The affected image-path is:" + image_path)
     return image
