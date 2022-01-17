@@ -69,9 +69,9 @@ def plot_histogram(image, mask=None, show_hist=True):
     :return: None
     """
     if check_gray(image):
-        __plot_grayscale_histogram(mask)
+        __plot_grayscale_histogram(image, mask)
     else:
-        __plot_rgb_histogram(mask)
+        __plot_rgb_histogram(image, mask)
     if show_hist:
         plt.show()
 
@@ -127,8 +127,10 @@ def create_round_mask(image, center=None, radius=100):
     blank = np.zeros(image.shape[:2], dtype='uint8')
     circle = cv2.circle(img=blank, center=center, radius=radius,
                         color=255, thickness=-1)
-    # cv2.imshow('Mask', cv2.bitwise_and(src1=image, src2=image, mask=circle))
-    # cv2.waitKey(0)
-    plt.imshow(cv2.bitwise_and(src1=image, src2=image, mask=circle))
+    if check_gray(image):
+        plt.imshow(cv2.bitwise_and(src1=image, src2=image, mask=circle), cmap="gray")
+    else:
+        plt.imshow(cv2.bitwise_and(src1=image, src2=image, mask=circle))
+
     plt.show()
     return circle
