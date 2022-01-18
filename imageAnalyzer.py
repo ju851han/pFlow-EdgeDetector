@@ -59,8 +59,6 @@ def show_images(plot_axis=True, number_cols=2, images=[], title=None, window_nam
         else:
             plt.title(title[i])
         plt.imshow(images[i], cmap="gray")
-        print(i)
-
     plt.show()
 
 
