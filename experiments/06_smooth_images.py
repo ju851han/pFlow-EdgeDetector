@@ -1,7 +1,5 @@
 import os
-
 import matplotlib.pyplot as plt
-
 import imageAnalyzer
 import imageCleaner
 
@@ -19,11 +17,9 @@ def create_titles():
     titles.append("Edge Preserving Filter")
 
 
-def analyze_every_filter_behavior(ksize=5, show_plt_now=True):
-    for file_name in os.listdir(os.getcwd()):
-        if file_name.lower().endswith('.png'):
+def analyze_every_filter_behavior(image, ksize=5, show_plt_now=True):
             images = []
-            image = imageCleaner.transform_image_to_grayscale(file_name)
+            image = imageCleaner.transform_image_to_grayscale(image)
             images.append(image)
             images.append(imageCleaner.add_gaussian_blur(image=image, kernel_size=(ksize, ksize)))
             # imageCleaner.apply_simple_threshold(130)
@@ -56,10 +52,13 @@ def apply_all_filter_to_one_image():
 
 
 create_titles()
-
 # apply_all_filter_to_one_image()
-for i in [3, 5, 7, 9, 11, 21]:
-    print("Runde: {}".format(i+1))
-    analyze_every_filter_behavior(ksize=i, show_plt_now=False)
-plt.show()
+
+for file_name in os.listdir(os.getcwd()):
+    if file_name.lower().endswith('.png'):
+        # image_size = os.path.getsize(os.getcwd() + "/" + file_name)  # Output in Bytes
+        # print(image_size)
+        for i in [3, 5, 7, 9, 11, 21]:
+            analyze_every_filter_behavior(image=file_name, ksize=i, show_plt_now=False)
+        plt.show()
 
