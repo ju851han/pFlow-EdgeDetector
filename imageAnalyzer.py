@@ -36,7 +36,7 @@ def show_image(image, name='Image', show_now=True, contrast_auto=False):
         plt.show()
 
 
-def show_images(plot_axis=True, number_cols=2, images=[], titles=None, window_name="Image"):
+def show_images(plot_axis=True, number_cols=2, images=[], titles=None, window_name="Image", show_now=True):
     """Displays images in a window.
 
     :param titles: str or list of str or None; title of the image
@@ -44,6 +44,7 @@ def show_images(plot_axis=True, number_cols=2, images=[], titles=None, window_na
     :param window_name: str;
     :param plot_axis: bool;
     :param images: list of images;
+    :param show_now: bool; If it is True, then the image is shown.
     :return: None;
     """
     if images is None:
@@ -59,7 +60,8 @@ def show_images(plot_axis=True, number_cols=2, images=[], titles=None, window_na
         else:
             plt.title(titles[i])
         plt.imshow(images[i], cmap="gray")
-    plt.show()
+    if show_now:
+        plt.show()
 
 
 def plot_histogram(image, mask=None, show_hist=True):
