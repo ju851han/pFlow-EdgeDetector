@@ -360,7 +360,6 @@ def eroding_image(image, kernel_size=(3, 3), number_of_iterations=1):
 def add_bilateral_blur(image, kernel_size=5, sigma_color=15, sigma_space=15):
     """ Unlike the other methods this method also blurs the image, but it does not make the edges less sharp.
 
-    That is why it is the most effective blurring method.
     :param image: image
     :param kernel_size: tuple of int: (number_of_rows, number_of cols)
     :param sigma_color: int; if it is a high number, then different colors are in the surrounding pixels
@@ -415,7 +414,7 @@ def apply_sobel(image):
 
 
     :param image: image
-    :return:
+    :return:0
     """
     if len(image.shape) != 2:
         transform_colored_into_grayscale_img(image)
