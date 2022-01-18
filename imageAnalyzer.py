@@ -36,11 +36,12 @@ def show_image(image, name='Image', show_now=True, contrast_auto=False):
         plt.show()
 
 
-def show_images(plot_axis=True, number_cols=2, images=[], name="Image"):
+def show_images(plot_axis=True, number_cols=2, images=[], title=None, window_name="Image"):
     """Displays images in a window.
 
+    :param title: str or list of str or None; title of the image
     :param number_cols: int;
-    :param name: str;
+    :param window_name: str;
     :param plot_axis: bool;
     :param images: list of images;
     :return: None;
@@ -48,13 +49,17 @@ def show_images(plot_axis=True, number_cols=2, images=[], name="Image"):
     if images is None:
         images = []
     number_rows = int(math.ceil(len(images) / number_cols))
-    plt.figure(name)
+    plt.figure(window_name)
     plt.subplots_adjust(hspace=0.1, wspace=0.1)
     for i in range(len(images)):
-        plt.subplot(number_rows, number_cols, i + 1)
+        plt.subplot(number_rows, number_cols, i+1)
         plt.axis(plot_axis)
-        plt.title("{} {}".format(name, i))
+        if title is None:
+            plt.title("{} {}".format(window_name, i))
+        else:
+            plt.title(title[i])
         plt.imshow(images[i], cmap="gray")
+        print(i)
 
     plt.show()
 
