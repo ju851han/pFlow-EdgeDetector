@@ -1,27 +1,41 @@
 import os
 
+import matplotlib.pyplot as plt
+
 import imageAnalyzer
 import imageCleaner
 
 os.chdir('../training_images/floor_plan')
 
+titles = []
 
-def analyze_every_filter_behavior():
+
+def create_titles():
+    titles.append("Grayscale Image")
+    titles.append("Gaussian Blur")
+    titles.append("Average Blur")
+    titles.append("Bilateral Blur")
+    titles.append("Median Blur")
+    titles.append("Edge Preserving Filter")
+
+
+def analyze_every_filter_behavior(ksize=5, show_plt_now=True):
     for file_name in os.listdir(os.getcwd()):
         if file_name.lower().endswith('.png'):
             images = []
             image = imageCleaner.transform_image_to_grayscale(file_name)
-            images.append(imageCleaner.add_gaussian_blur(image, (5, 5)))
+            images.append(image)
+            images.append(imageCleaner.add_gaussian_blur(image=image, kernel_size=(ksize, ksize)))
             # imageCleaner.apply_simple_threshold(130)
             # imageCleaner.apply_adaptive_threshold(neighborhood_size=81)
-            images.append(imageCleaner.add_average_blur(image, kernel_size=(5, 5)))
+            images.append(imageCleaner.add_average_blur(image=image, kernel_size=(ksize, ksize)))
             images.append(imageCleaner.add_bilateral_blur(image))
-            images.append(imageCleaner.add_median_blur(image))
-            images.append(imageCleaner.add_edge_preserving_filter(image))
+            images.append(imageCleaner.add_median_blur(image=image, kernel_size=ksize))
+            images.append(imageCleaner.add_edge_preserving_filter(image=image))
             # images.append(imageCleaner.apply_laplacian(image))
             # images.append(imageCleaner.apply_sobel(image))
             # images.append(imageCleaner.apply_canny_filter(image))
-            imageAnalyzer.show_images(plot_axis=False, number_cols=3, images=images, name="Bilder")
+            imageAnalyzer.show_images(plot_axis=False, number_cols=3, images=images, window_name="{} with kernel size {}".format(file_name, ksize), titles=titles, show_now=show_plt_now)
 
 
 def apply_all_filter_to_one_image():
@@ -29,6 +43,7 @@ def apply_all_filter_to_one_image():
         if file_name.lower().endswith('.png'):
             images = []
             image = imageCleaner.transform_image_to_grayscale(file_name)
+            images.append(image)
             images.append(imageCleaner.add_gaussian_blur(image, (5, 5)))
             images.append(imageCleaner.add_average_blur(images[0], kernel_size=(5, 5)))
             images.append(imageCleaner.add_bilateral_blur(images[1]))
@@ -37,8 +52,14 @@ def apply_all_filter_to_one_image():
             # images.append(imageCleaner.apply_laplacian(images[4]))
             # images.append(imageCleaner.apply_sobel(images[5]))
             # images.append(imageCleaner.apply_canny_filter(images[6]))
-            imageAnalyzer.show_images(plot_axis=False, number_cols=3, images=images, name="Bilder")
+            imageAnalyzer.show_images(plot_axis=False, number_cols=3, images=images, window_name="Bilder", titles=titles)
 
 
-# analyze_every_filter_behavior()
-apply_all_filter_to_one_image()
+create_titles()
+
+# apply_all_filter_to_one_image()
+for i in [3, 5, 7, 9, 11, 21]:
+    print("Runde: {}".format(i+1))
+    analyze_every_filter_behavior(ksize=i, show_plt_now=False)
+plt.show()
+
