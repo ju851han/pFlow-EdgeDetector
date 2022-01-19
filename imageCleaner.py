@@ -57,14 +57,16 @@ def load_image(image_path):
     :return: image
 
     """
+    if not image_path.lower().endswith('.png'):
+        raise FileExistsError("Data type of the image must be a .png. Current image_path ist:{}".format(image_path))
     if type(image_path) == int:
-        raise TypeError("Image path must be a str! Current image_path is:" + str(image_path))
+        raise TypeError("Image path must be a str! Current image_path is:{}".format(image_path))
     if not os.path.exists(image_path):
         raise FileNotFoundError("File was not found. The searched image_path is: {}".format(image_path))
     image = cv2.imread(filename=image_path)  # , flags=0)
     image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
     if image is None:
-        raise AttributeError("Image-file can't be found. The affected image-path is:" + image_path)
+        raise AttributeError("Image-file can't be found. The affected image-path is:{}".format(image_path))
     return image
 
 
@@ -78,7 +80,7 @@ def show_image(image, scale=1, title='Image', wait_for_close=False):
     :return: None
     """
     if scale < 0 or scale > 1:
-        raise ValueError("Scale must be between 0 and 1.\nCurrent value of the scale: " + str(scale))
+        raise ValueError("Scale must be between 0 and 1.\nCurrent value of the scale: {}".format(scale))
     else:
         width = int(image.shape[1] * scale)
         height = int(image.shape[0] * scale)
@@ -153,8 +155,10 @@ def transform_image_to_grayscale(image_path):
     :return: grayscale-image
 
     """
+    if not image_path.lower().endswith('.png'):
+        raise FileExistsError("Data type of the image must be a .png. Current image_path ist:{}".format(image_path))
     if type(image_path) == int:
-        raise TypeError("Image path must be a str! Current image_path is:" + str(image_path))
+        raise TypeError("Image path must be a str! Current image_path is:{}".format(image_path))
     if not os.path.exists(image_path):
         raise FileNotFoundError("File was not found. The searched image_path is: {}".format(image_path))
     image = cv2.imread(filename=image_path)  # , flags=0)
