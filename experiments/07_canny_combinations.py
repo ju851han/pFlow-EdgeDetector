@@ -4,7 +4,7 @@ import imageAnalyzer
 import imageCleaner
 import os
 
-image_path = "training_images/floor_plan/"
+image_path = "../training_images/floor_plan/"
 file_name = "O_-1.png"
 images = []
 titles = []
