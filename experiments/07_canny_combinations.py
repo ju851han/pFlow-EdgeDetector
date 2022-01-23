@@ -49,4 +49,4 @@ image_closed_canny_closing_big = cv2.morphologyEx(image_closed_canny, cv2.MORPH_
 images.append(image_closed_canny_closing_big)
 titles.append("Closing + Gauss + Canny + Closing Rectangle 7x7")
 
-imageAnalyzer.show_images(plot_axis=False, number_cols=3, images=images, titles=titles)
+imageAnalyzer.show_images(plot_axis=False, number_cols=2, images=images, titles=titles, window_name="Canny Combinations")
