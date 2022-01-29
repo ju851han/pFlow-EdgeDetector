@@ -1,3 +1,8 @@
+""" Experiment 1: Save corner-points of the polygons.
+    After executing this main, run the main from the pflow.
+    Choose File / Open and select the current saved file.
+    Result: The saved polygon is now shown.
+"""
 from polygon import Polygon
 
 
@@ -53,5 +58,5 @@ def save_polygons():
     rectangle.save_to_file("polygon_with_inner_obstacles.nsv")
 
 
-save_rectangle()
+# save_rectangle()
 save_polygons()
