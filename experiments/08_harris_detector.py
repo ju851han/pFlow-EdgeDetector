@@ -33,7 +33,7 @@ def apply_harris(image):
     # Harris
     canny = np.float32(image_canny_finished)
     # dst = cv2.cornerHarris(canny, 2, 3, 0.04)
-    dst = cv2.cornerHarris(src=canny, blockSize=2, ksize=5, k=0.07)
+    dst = cv2.cornerHarris(src=canny, blockSize=2, ksize=5, k=0.05)
     # Threshold for an optimal value, it may vary depending on the image.
     image_rgb[dst > 0.01 * dst.max()] = [0, 0, 255]
     images.append(image_rgb)
@@ -74,17 +74,55 @@ def get_coordinates_old(corner_list):
     return remaining_corners
 
 
+def get_coordinates(corner_list):
+    cluster_list = []
+    for corner in corner_list:
+        check_find = False
+        for cluster in cluster_list:
+            point = cluster[0]
+            a = point[0] - corner[0]
+            b = point[1] - corner[1]
+            distance = sqrt(a ** 2 + b ** 2)
+            if distance <= MAX_DISTANCE_CORNER:
+                cluster.append(corner)
+                check_find = True
+                break
+        if not check_find:
+            cluster_list.append([corner])
+
+    final_corners = []
+    for cluster in cluster_list:
+        x_coordinate, y_coordinate, number_of_points = 0, 0, 0
+        # calculate mean for corner point coordinates
+        for point in cluster:
+            x_coordinate += point[0]
+            y_coordinate += point[1]
+            number_of_points += 1
+        x_coordinate = x_coordinate/number_of_points
+        y_coordinate = y_coordinate/number_of_points
+        final_corners.append((x_coordinate, y_coordinate))
+
+    return final_corners
+
+
 os.chdir(image_path)
 # for file_name in os.listdir(os.getcwd()):
 #     if file_name.lower().endswith('.png'):
 corners = apply_harris(file_name)
-final_corners = get_coordinates_old(extract_corner_array(corners))
-final_corners = np.array(final_corners)     # Umwandeln von Liste zu Matrix
-x, y = final_corners.T
 
+final_corners_v1 = get_coordinates_old(extract_corner_array(corners))
+final_corners_v1 = np.array(final_corners_v1)     # Umwandeln von Liste zu Matrix
+x, y = final_corners_v1.T
 imageAnalyzer.show_images(plot_axis=False, number_cols=2, images=images, titles=titles, window_name=file_name, show_now=False)
 plt.subplot(2, 2, 3)    # TODO 3 statt 4
 plt.scatter(x, y, marker="*", color="red")
+
+final_corners_v2 = get_coordinates(extract_corner_array(corners))
+final_corners_v2 = np.array(final_corners_v2)     # Umwandeln von Liste zu Matrix
+x, y = final_corners_v2.T
+plt.subplot(2, 2, 3)    # TODO 3 statt 4
+plt.scatter(x, y, marker=".", color="green")
+
 plt.show()
 
 
