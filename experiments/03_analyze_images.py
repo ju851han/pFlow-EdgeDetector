@@ -15,7 +15,7 @@ def analyze_images(folder=None):
     for file_name in os.listdir(os.getcwd()):
         if file_name.lower().endswith('.png'):
             image = imageCleaner.load_image(file_name)
-            # image = imageCleaner.transform_image_to_grayscale(file_name)
+            # image = imageCleaner.transform_colored_into_grayscale_image(file_name)
             imageAnalyzer.plot_histogram(image, show_hist=False)
             imageAnalyzer.show_image(image)
             if file_name == "Dog.png" and folder == "photos":

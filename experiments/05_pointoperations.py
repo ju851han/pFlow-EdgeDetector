@@ -21,7 +21,7 @@ for file_name in os.listdir(os.getcwd()):
     if file_name.lower().endswith('.png'):
         image = file_name
 
-        image = imageCleaner.transform_image_to_grayscale(image)
+        image = imageCleaner.transform_file_into_grayscale_image(image)
         imageCleaner.show_image(image=image, title='Gray Image', wait_for_close=True)
 
         apply_threshold(image)

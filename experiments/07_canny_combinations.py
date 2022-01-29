@@ -13,7 +13,7 @@ for file_name in os.listdir(os.getcwd()):
         images = []
         titles = []
 
-        image_gray = imageCleaner.transform_image_to_grayscale(file_name)
+        image_gray = imageCleaner.transform_file_into_grayscale_image(file_name)
         images.append(image_gray)
         titles.append("Grayscale Image")
 

@@ -19,7 +19,7 @@ def create_titles():
 
 def analyze_every_filter_behavior(image, ksize=5, show_plt_now=True):
             images = []
-            image = imageCleaner.transform_image_to_grayscale(image)
+            image = imageCleaner.transform_file_into_grayscale_image(image)
             images.append(image)
             images.append(imageCleaner.add_gaussian_blur(image=image, kernel_size=(ksize, ksize)))
             # imageCleaner.apply_simple_threshold(130)
@@ -38,7 +38,7 @@ def apply_all_filter_to_one_image():
     for file_name in os.listdir(os.getcwd()):
         if file_name.lower().endswith('.png'):
             images = []
-            image = imageCleaner.transform_image_to_grayscale(file_name)
+            image = imageCleaner.transform_file_into_grayscale_image(file_name)
             images.append(image)
             images.append(imageCleaner.add_gaussian_blur(image, (5, 5)))
             images.append(imageCleaner.add_average_blur(images[0], kernel_size=(5, 5)))

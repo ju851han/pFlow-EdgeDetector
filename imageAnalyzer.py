@@ -24,7 +24,10 @@ def show_image(image, name='Image', show_now=True, contrast_auto=False):
     :return: None
     """
     plt.figure(name)
-
+    # plt.title('Headline')
+    # plt.xlabel('X Axis Description')
+    # plt.ylabel('Y Axis Description')
+    # plt.legend([Value1,Value2])
     if check_gray(image):
         if contrast_auto:
             plt.imshow(X=image, cmap="gray")

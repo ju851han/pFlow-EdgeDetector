@@ -17,7 +17,7 @@ def apply_harris(image):
     images.clear()
     titles.clear()
     image_rgb = imageCleaner.load_image(image)
-    image_gray = imageCleaner.transform_image_to_grayscale(image)
+    image_gray = imageCleaner.transform_file_into_grayscale_image(image)
     images.append(image_gray)
     titles.append("Grayscale Image")
 

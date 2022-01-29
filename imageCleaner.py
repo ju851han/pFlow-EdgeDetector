@@ -54,7 +54,7 @@ def load_image(image_path):
     """Loads an image.
 
     :param image_path: str
-    :return: image
+    :return: rgb-image
 
     """
     if not image_path.lower().endswith('.png'):
@@ -63,7 +63,7 @@ def load_image(image_path):
         raise TypeError("Image path must be a str! Current image_path is:{}".format(image_path))
     if not os.path.exists(image_path):
         raise FileNotFoundError("File was not found. The searched image_path is: {}".format(image_path))
-    image = cv2.imread(filename=image_path)  # , flags=0)
+    image = cv2.imread(filename=image_path)
     image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
     if image is None:
         raise AttributeError("Image-file can't be found. The affected image-path is:{}".format(image_path))
@@ -146,8 +146,8 @@ Non-homogeneous point operations depend on pixel coordinate.
 """
 
 
-def transform_image_to_grayscale(image_path):
-    """Transforms an image to grayscale-image.
+def transform_file_into_grayscale_image(image_path):
+    """Homogeneous point operation: Transforms an image to grayscale-image.
 
     flags=0 in cv2.imread()-method means that the passed image is transformed as a gray value image.
     If no flags have been set, the image is colored.
@@ -168,11 +168,11 @@ def transform_image_to_grayscale(image_path):
     return image
 
 
-def transform_colored_into_grayscale_img(image):
+def transform_colored_into_grayscale_image(image):
     """Homogeneous point operation: Changes a color image into a grayscale-image and overwrites the variable image.
 
     :param image: image
-    :return: image
+    :return: grayscale-image
     """
     return cv2.cvtColor(image, cv2.COLOR_RGB2GRAY)
 
