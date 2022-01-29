@@ -32,7 +32,8 @@ def apply_harris(image):
 
     # Harris
     canny = np.float32(image_canny_finished)
-    dst = cv2.cornerHarris(canny, 2, 3, 0.04)
+    # dst = cv2.cornerHarris(canny, 2, 3, 0.04)
+    dst = cv2.cornerHarris(src=canny, blockSize=2, ksize=5, k=0.07)
     # Threshold for an optimal value, it may vary depending on the image.
     image_rgb[dst > 0.01 * dst.max()] = [0, 0, 255]
     images.append(image_rgb)
@@ -63,8 +64,8 @@ def get_coordinates(corner_array):
                 already_there = True
         if not already_there:
             remaining_corners.append(corner)
-        else:
-            print("Verworfene Ecke {}".format(corner))
+        # else:
+        #     print("Verworfene Ecke {}".format(corner))
 
     print("Anzahl Ecken: {}".format(len(remaining_corners)))
     return remaining_corners
