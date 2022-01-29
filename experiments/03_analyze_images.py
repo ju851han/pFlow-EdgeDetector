@@ -1,3 +1,6 @@
+""" Experiment 3: Build methods for analyzing the images.
+
+"""
 import imageCleaner
 import imageAnalyzer
 import os
@@ -6,6 +9,11 @@ os.chdir('../training_images/')
 
 
 def analyze_images(folder=None):
+    """ Shows image and associated plot.
+
+    :param folder: folder_path
+    :return: None
+    """
     try:
         if folder is not None:
             os.chdir(folder)
@@ -19,8 +27,8 @@ def analyze_images(folder=None):
             imageAnalyzer.plot_histogram(image, show_hist=False)
             imageAnalyzer.show_image(image)
             if file_name == "Dog.png" and folder == "photos":
-                imageAnalyzer.plot_histogram(image, imageAnalyzer.create_round_mask(image=image, center=(500, 700),
-                                                                                    radius=350))  # Dog-face
+                mask = imageAnalyzer.create_round_mask(image=image, center=(500, 700), radius=350)  # Dog-face
+                imageAnalyzer.plot_histogram(image, mask)
 
 
 analyze_images("photos")
