@@ -42,19 +42,22 @@ def apply_harris(image):
     return dst > 0.01 * dst.max()
 
 
-def get_coordinates(corner_array):
+def extract_corner_array(corner_array):
     all_corners = []
+    # Collect and extract found corners
+    for x_coordinate in range(corner_array.shape[1]):
+        for y_coordinate in range(corner_array.shape[0]):
+            if corner_array[y_coordinate, x_coordinate]:
+                all_corners.append((x_coordinate, y_coordinate))
+    print("Anzahl Ecken: {}".format(len(all_corners)))
+    return all_corners
+
+
+def get_coordinates_old(corner_list):
+    # Sort out unnecessary corners
     remaining_corners = []
 
-    # Collect found corners
-    for x in range(corner_array.shape[1]):
-        for y in range(corner_array.shape[0]):
-            if corner_array[y, x]:
-                all_corners.append((x, y))
-    print("Anzahl Ecken: {}".format(len(all_corners)))
-
-    # Sort out unnecessary corners
-    for corner in all_corners:
+    for corner in corner_list:
         already_there = False
         for c in remaining_corners:
             a = corner[0] - c[0]
@@ -75,9 +78,9 @@ os.chdir(image_path)
 # for file_name in os.listdir(os.getcwd()):
 #     if file_name.lower().endswith('.png'):
 corners = apply_harris(file_name)
-remaining_corners = get_coordinates(corners)
-remaining_corners = np.array(remaining_corners)     # Umwandeln von Liste zu Matrix
-x, y = remaining_corners.T
+final_corners = get_coordinates_old(extract_corner_array(corners))
+final_corners = np.array(final_corners)     # Umwandeln von Liste zu Matrix
+x, y = final_corners.T
 
 imageAnalyzer.show_images(plot_axis=False, number_cols=2, images=images, titles=titles, window_name=file_name, show_now=False)
 plt.subplot(2, 2, 3)    # TODO 3 statt 4
