@@ -2,7 +2,6 @@
 
 """
 import os
-
 import imageCleaner
 
 WINDOW_WIDTH = 1300
@@ -20,7 +19,7 @@ def resize_image(image_path):
     return image
 
 
-def resize_image_without_distortion(image_path):
+def resize_image_without_distortion(image_path): #TODO in imageCleaner einfügen
     """ Resizes the image so that it can be displayed in pFlowGRID.
 
     :param image_path: str
@@ -44,10 +43,11 @@ def resize_image_without_distortion(image_path):
 def snip_image(image_path):
     """ Snips the image so that it can be displayed in pFlow_Grid.
 
+    :type image_path: str
     :return: image
     """
     image = imageCleaner.transform_file_into_grayscale_image(image_path)
-    image = imageCleaner.snip_image(image, 0, 1300, 0, 610)
+    image = imageCleaner.snip_image(image, 0, 500, 0, 250)
     imageCleaner.show_image(image, 1, 'Snipped Image', True)
     return image
 
