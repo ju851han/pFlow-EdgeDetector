@@ -1,9 +1,14 @@
-import os.path
+""" Methods for Loading and Processing Images (Pictures)
 
+"""
+import os.path
 import cv2
 import numpy as np
 
-"Methods for Loading and Processing Images (Pictures)"
+WINDOW_WIDTH = 1300
+WINDOW_HEIGHT = 610
+MIN_GRAY_VALUE = 0
+MAX_GRAY_VALUE = 255
 
 
 ##########
@@ -33,17 +38,63 @@ def __check_rgb_values(red, green, blue):
         raise TypeError("Data type of blue must be int.\n"
                         "Current blue value: " + str(blue) + "\n"
                                                              "Current data type of blue: " + str(type(blue)))
-    elif red < 0 or red > 255:
+    elif red < MIN_GRAY_VALUE or red > MAX_GRAY_VALUE:
         raise ValueError("Value of Red is incorrect. Current red value: " + str(red))
-    elif green < 0 or green > 255:
+    elif green < MIN_GRAY_VALUE or green > MAX_GRAY_VALUE:
         raise ValueError("Value of Green is incorrect. Current green value: " + str(green))
-    elif blue < 0 or blue > 255:
+    elif blue < MIN_GRAY_VALUE or blue > MAX_GRAY_VALUE:
         raise ValueError("Value of Blue is incorrect. Current blue value: " + str(blue))
-    elif red == 0 and green == 0 and blue == 0:
+    elif red == MIN_GRAY_VALUE and green == MIN_GRAY_VALUE and blue == MIN_GRAY_VALUE:
         raise AttributeError("The value of red, green and blue is 0.\n"
                              "At least one value of red, green or blue must be greater than zero.")
 
-    # TODO CHECK for ksize, x, y
+
+def __check_threshold(value):
+    """ Checks if threshold value is in [0;255].
+
+    :param value: int; threshold value
+    :return: None
+    """
+    if not isinstance(value, int):
+        raise TypeError("Data type of the threshold value must be int.\n"
+                        "Current threshold value is: " + str(value) + "\n"
+                        "Current data type of the threshold value is: " + str(type(value)))
+    elif value < MIN_GRAY_VALUE or value > MAX_GRAY_VALUE:
+        raise ValueError("The threshold value is incorrect. It must be between 0 and 255. Current threshold value is: " + str(value))
+
+
+def __check_height(image, height):  #TODO WINDOW_HEIGHT
+    """ Checks if the height is smaller or equals to image-height.
+
+    Used for checking y-axis and kernel size.
+    :param image: image
+    :param height: int
+    :return: None
+    """
+    if height > image.shape[0]:
+        raise ValueError("The height value is incorrect. It must be smaller than the image height. Current height value is: " + str(height))
+    elif not isinstance(height, int):
+        raise TypeError("Data type of the height must be int.\n"
+                        "Current height is: " + str(height) + "\n"
+                        "Current data type of height: " + str(type(height)))
+
+
+def __check_width(image, width):    #TODO WINDOW_WIDTH
+    """ Checks if the width is smaller or equals to image-width.
+
+    Used for checking x-axis and kernel size.
+    :param image: image
+    :param width: int
+    :return: None
+    """
+    if width > image.shape[1]:
+        raise ValueError(
+            "The width value is incorrect. It must be smaller than the image width. Current width value is: " + str(
+                width))
+    elif not isinstance(width, int):
+        raise TypeError("Data type of the height must be int.\n"
+                        "Current height is: " + str(width) + "\n"
+                        "Current data type of height: " + str(type(width)))
 
 
 ##########
@@ -83,7 +134,9 @@ def show_image(image, scale=1, title='Image', wait_for_close=False):
         raise ValueError("Scale must be between 0 and 1.\nCurrent value of the scale: {}".format(scale))
     else:
         width = int(image.shape[1] * scale)
+        __check_width(image, width)
         height = int(image.shape[0] * scale)
+        __check_height(image, height)
         dimensions = (width, height)
         frame_resized = cv2.resize(image, dimensions, interpolation=cv2.INTER_AREA)
         cv2.imshow(title, frame_resized)
@@ -95,26 +148,29 @@ def show_image(image, scale=1, title='Image', wait_for_close=False):
 # IMAGE SIZING #
 ################
 
-def resize_image(image, x, y):
+def resize_image(image, x=WINDOW_WIDTH, y=WINDOW_HEIGHT):
     """ Changes the size of the image.
 
+        Default parameter values are the window width (x) and height (y) of pFlowGRID.
         :param image: image
         :param x: int; size of the x-axis
         :param y: int; size of the y-axis
         :return: image
         """
     orig_width = int(image.shape[1])
+    __check_width(image, orig_width)
     orig_height = int(image.shape[0])
+    __check_height(image, orig_height)
     if x < orig_width or y < orig_height:
         return cv2.resize(src=image, dsize=(x, y), interpolation=cv2.INTER_AREA)
     else:
-        # image = cv2.resize(src=image, dsize=(x, y), interpolation=cv2.INTER_CUBIC)
         return cv2.resize(src=image, dsize=(x, y), interpolation=cv2.INTER_LINEAR)
 
 
-def snip_image(image, x_min, x_max, y_min, y_max):
+def snip_image(image, x_min=0, x_max=WINDOW_WIDTH, y_min=0, y_max=WINDOW_HEIGHT):
     """ Cuts out an image. The result is a cropped image.
 
+    Default parameters values are the window width (x) and height (y) of pFlowGRID.
     :param image: image
     :param x_min: int; start on the x-axis
     :param x_max: int; end on the x-axis
@@ -134,8 +190,11 @@ def rotate_image(image, rotation_degrees=45):
     """
     (height, weight) = image.shape[:2]
     (x, y) = (weight // 2, height // 2)
+    __check_width(image, x)
+    __check_height(image, y)
     matrix = cv2.getRotationMatrix2D((x, y), rotation_degrees, 1.0)
     return cv2.warpAffine(image, matrix, (weight, height))
+
 
 ####################
 # POINT OPERATIONS #
@@ -152,7 +211,7 @@ def transform_file_into_grayscale_image(image_path):
     flags=0 in cv2.imread()-method means that the passed image is transformed as a gray value image.
     If no flags have been set, the image is colored.
     :param image_path: str
-    :return: grayscale-image
+    :return: image
 
     """
     if not image_path.lower().endswith('.png'):
@@ -172,7 +231,7 @@ def transform_colored_into_grayscale_image(image):
     """Homogeneous point operation: Changes a color image into a grayscale-image and overwrites the variable image.
 
     :param image: image
-    :return: grayscale-image
+    :return: image
     """
     return cv2.cvtColor(image, cv2.COLOR_RGB2GRAY)
 
@@ -180,7 +239,7 @@ def transform_colored_into_grayscale_image(image):
 def apply_simple_threshold(image, threshold=150):
     """Homogeneous point operation: Binaries the image with the simple threshold method.
 
-    Precondition: The image must be a gray scale image. If the image shape has more than 2 channels (image.shape)
+    Precondition: The image must be a grayscale-image. If the image shape has more than 2 channels (image.shape)
     then it is a color image.
     This Method compares each pixel value (=intensity value) of the image with the threshold.
     If the pixel value is below than threshold then the new pixel value is 0.
@@ -189,8 +248,9 @@ def apply_simple_threshold(image, threshold=150):
     :param threshold: int
     :return: image
     """
+    __check_threshold(threshold)
     if len(image.shape) != 2:
-        transform_colored_into_grayscale_img(image)
+        transform_colored_into_grayscale_image(image)
 
     _, thresh = cv2.threshold(src=image, thresh=threshold, maxval=255, type=cv2.THRESH_BINARY)
     return thresh
@@ -211,7 +271,7 @@ def apply_adaptive_threshold(image, neighborhood_size=11, offset=0, invert=False
     :return: image
     """
     if len(image.shape) != 2:
-        image = transform_image_to_grayscale(image)
+        image = transform_colored_into_grayscale_image(image)
 
     if invert:
         thresh_type = cv2.THRESH_BINARY_INV
@@ -226,7 +286,7 @@ def apply_adaptive_threshold(image, neighborhood_size=11, offset=0, invert=False
         raise AttributeError('The passed value for adaptiveMethod is not valid.\n'
                              'Valid values are \'Gaussian or Mean\'. Current value is:' + str(adaptive_method_name))
 
-    return cv2.adaptiveThreshold(src=image, maxValue=255, adaptiveMethod=adaptive_method,
+    return cv2.adaptiveThreshold(src=image, maxValue=MAX_GRAY_VALUE, adaptiveMethod=adaptive_method,
                                  thresholdType=thresh_type, blockSize=neighborhood_size, C=offset)
 
 
@@ -255,8 +315,12 @@ def change_color_in_area(image, y_min, y_max, x_min, x_max, blue=0, green=0, red
     :return: image
     """
     __check_rgb_values(red, green, blue)
+    __check_width(image, x_min)
+    __check_width(image, x_max)
+    __check_height(image, y_min)
+    __check_height(image, y_max)
 
-    if 2 == len(image.shape):   # check if image is gray then only variable red is considered
+    if 2 == len(image.shape):  # check if image is gray then only variable red is considered
         image[y_min:y_max, x_min:x_max] = red
     else:
         image[y_min:y_max, x_min:x_max] = red, green, blue
@@ -275,6 +339,8 @@ def change_color_in_pixel(image, y, x, blue=0, green=0, red=255):
     :return: image
     """
     __check_rgb_values(red, green, blue)
+    __check_width(image, x)
+    __check_height(image, y)
     image[y, x] = red, green, blue
     return image
 
@@ -282,8 +348,9 @@ def change_color_in_pixel(image, y, x, blue=0, green=0, red=255):
 ###########
 # FILTERS #
 ###########
+# TODO edit description
 """
-A filter smooths the image by adding a blur to it.
+A filter smooths the image by adding a blur to it.  
 One reason for using a filter is if the image contains a lot of noise because
 applying the filter reduces the noises in the image.
 
@@ -312,6 +379,8 @@ def add_gaussian_blur(image, kernel_size=(3, 3), sigma_x=2):
             If the value is small, then the image is less smoothed.
     :return: image
     """
+    __check_height(image, kernel_size[0])
+    __check_width(image, kernel_size[1])
     return cv2.GaussianBlur(src=image, ksize=kernel_size, sigmaX=sigma_x)
 
 
@@ -324,6 +393,8 @@ def add_average_blur(image, kernel_size=(3, 3)):
     :param kernel_size: tuple of int: (number_of_rows, number_of cols)
     :return: image
     """
+    __check_height(image, kernel_size[0])
+    __check_width(image, kernel_size[1])
     return cv2.blur(src=image, ksize=kernel_size)
 
 
@@ -336,28 +407,34 @@ def add_median_blur(image, kernel_size=3):
     :param kernel_size: tuple of int: (number_of_rows, number_of cols)
     :return: image
     """
+    __check_height(image, kernel_size[0])
+    __check_width(image, kernel_size[1])
     return cv2.medianBlur(src=image, ksize=kernel_size)
 
 
 def dilating_image(image, kernel_size=(3, 3), number_of_iterations=1):
-    """Morphological operation: Expands Pixel
+    """Morphological operation: Expands bright Pixel-Areas
 
     :param image: image
-    :param kernel_size: int; TODO
+    :param kernel_size: tuple of int: (number_of_rows, number_of cols)
     :param number_of_iterations: int; TODO
     :return: image
     """
+    __check_height(image, kernel_size[0])
+    __check_width(image, kernel_size[1])
     return cv2.dilate(src=image, kernel=kernel_size, iterations=number_of_iterations)
 
 
 def eroding_image(image, kernel_size=(3, 3), number_of_iterations=1):
-    """Morphological operation: Reduces Pixel
+    """Morphological operation: Reduces bright Pixel-Areas
 
     :param image: image
-    :param kernel_size: int; TODO
+    :param kernel_size: tuple of int: (number_of_rows, number_of cols)
     :param number_of_iterations: int; TODO
     :return: image
     """
+    __check_height(image, kernel_size[0])
+    __check_width(image, kernel_size[1])
     return cv2.erode(image, kernel=kernel_size, iterations=number_of_iterations)
 
 
@@ -372,6 +449,8 @@ def add_bilateral_blur(image, kernel_size=5, sigma_color=15, sigma_space=15):
                         affect the blur calculation.
     :return: image
     """
+    __check_height(image, kernel_size)
+    __check_width(image, kernel_size)
     return cv2.bilateralFilter(src=image, d=kernel_size, sigmaSpace=sigma_space, sigmaColor=sigma_color)
 
 
@@ -389,13 +468,15 @@ def apply_canny_filter(image, threshold1=125, threshold2=175):
     """Edge Filter: Places a filter according to the Canny Edge Algorithm over the image and returns  an image.
 
     Hint: If a blurred image is passed, then fewer edges are detected.
-    :param threshold2:
-    :param threshold1:
+    :param threshold2: int
+    :param threshold1: int
     :param image: image
     :return: image
     """
+    __check_threshold(threshold1)
+    __check_threshold(threshold2)
     if len(image.shape) != 2:
-        image = transform_colored_into_grayscale_img(image)
+        image = transform_colored_into_grayscale_image(image)
 
     return cv2.Canny(image=image, threshold1=threshold1, threshold2=threshold2)  # TODO threshold bestimmen
 
@@ -407,7 +488,7 @@ def apply_laplacian(image):
     :return: image
     """
     if len(image.shape) != 2:
-        image = transform_colored_into_grayscale_img(image)
+        image = transform_colored_into_grayscale_image(image)
 
     lap = cv2.Laplacian(image, cv2.CV_64F)
     return np.uint8(np.absolute(lap))
@@ -421,7 +502,7 @@ def apply_sobel(image):
     :return:0
     """
     if len(image.shape) != 2:
-        transform_colored_into_grayscale_img(image)
+        transform_colored_into_grayscale_image(image)
 
     sobel_x = cv2.Sobel(src=image, ddepth=cv2.CV_64F, dx=1, dy=0)
     sobel_y = cv2.Sobel(src=image, ddepth=cv2.CV_64F, dx=0, dy=1)
