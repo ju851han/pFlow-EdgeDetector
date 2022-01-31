@@ -23,6 +23,8 @@ def apply_dijkstra(img):
         neighbors = get_neighbors(point)
         for neighbor in neighbors:
             try:
+                if neighbor[0] < 0 or neighbor[1] < 0:
+                    continue     # IndexOutOfBounds without Exception
                 value = img[neighbor[1]][neighbor[0]]
                 # print(value)
                 if value == FLOOR_VALUE:
@@ -42,9 +44,9 @@ def apply_dijkstra(img):
 
 
 def get_neighbors(point):
-    return [(point[0] - 1, point[1] - 1), (point[0], point[1] - 1), (point[0] + 1, point[1] - 1),
+    return [(point[0], point[1] - 1),
             (point[0] - 1, point[1]), (point[0] + 1, point[1]),
-            (point[0] - 1, point[1] + 1), (point[0], point[1] + 1), (point[0] + 1, point[1] + 1)]
+            (point[0], point[1] + 1)]
 
 
 if __name__ == '__main__':
