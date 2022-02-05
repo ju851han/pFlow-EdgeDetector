@@ -1,8 +1,10 @@
 import math
-
 import cv2
 from matplotlib import pyplot as plt
 import numpy as np
+
+MIN_GRAY_VALUE = 0
+MAX_GRAY_VALUE = 255
 
 
 def check_gray(image):
@@ -96,13 +98,13 @@ def __plot_grayscale_histogram(image, mask=None):
     :param mask: mask; The mask helps to find out which intensity values are in the selected area
     :return: None
     """
-    hist = cv2.calcHist([image], [0], mask, [256], [0, 256])
+    hist = cv2.calcHist([image], [0], mask, [MAX_GRAY_VALUE], [MIN_GRAY_VALUE, MAX_GRAY_VALUE])
     plt.figure('Grayscale Histogram')  # create new window for histogram
     plt.title('Grayscale Histogram')
     plt.xlabel('Bins')
     plt.ylabel('Number of Pixels')
     plt.plot(hist, color='black')
-    plt.xlim([0, 256])
+    plt.xlim([MIN_GRAY_VALUE, MAX_GRAY_VALUE])
 
 
 def __plot_rgb_histogram(image, mask=None):
@@ -119,10 +121,10 @@ def __plot_rgb_histogram(image, mask=None):
 
     colors = ('r', 'g', 'b')
     for channels, color in enumerate(colors):
-        hist = cv2.calcHist(images=[image], channels=[channels], mask=mask, histSize=[256], ranges=[0, 256])
+        hist = cv2.calcHist(images=[image], channels=[channels], mask=mask, histSize=[MAX_GRAY_VALUE], ranges=[MIN_GRAY_VALUE, MAX_GRAY_VALUE])
         plt.plot(hist, color=color)
 
-    plt.xlim([0, 256])
+    plt.xlim([MIN_GRAY_VALUE, MAX_GRAY_VALUE])
 
 
 def create_round_mask(image, center=None, radius=100):
