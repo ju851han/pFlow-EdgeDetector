@@ -6,28 +6,32 @@ import numpy as np
 
 
 def check_gray(image):
-    """Checks if the image is gray
+    """ Checks if the image is grayscale.
 
-    :param image:
-    :return:
+    :param image: image
+    :return: bool; If it is True, then the image is grayscale.
     """
     return 2 == len(image.shape)
 
 
-def show_image(image, name='Image', show_now=True, contrast_auto=False):
-    """Displays an image.
+def show_image(image, window_name='Image', title=None, show_now=True, contrast_auto=False, plot_axis=False):
+    """ Displays an image.
 
+    :param title: str; Headline of the Image
     :param image: image
     :param contrast_auto: bool; If it is True then the contrast is maximized.
-    :param name: str; name of the window
+    :param window_name: str; name of the window
     :param show_now: bool; If it is True, then the image is shown.
+    :param plot_axis: bool;  If it is True, then the axis are shown.
     :return: None
     """
-    plt.figure(name)
-    # plt.title('Headline')
-    # plt.xlabel('X Axis Description')
-    # plt.ylabel('Y Axis Description')
-    # plt.legend([Value1,Value2])
+    plt.figure(window_name)
+    if title is not None:
+        plt.title(title)
+    if plot_axis:
+        plt.xlabel('Number of Pixels')
+        plt.ylabel('Bins')
+    plt.axis(plot_axis)
     if check_gray(image):
         if contrast_auto:
             plt.imshow(X=image, cmap="gray")
@@ -40,13 +44,13 @@ def show_image(image, name='Image', show_now=True, contrast_auto=False):
 
 
 def show_images(plot_axis=True, number_cols=2, images=[], titles=None, window_name="Image", show_now=True):
-    """Displays images in a window.
+    """ Displays images in only one window.
 
     :param titles: str or list of str or None; title of the image
-    :param number_cols: int;
-    :param window_name: str;
-    :param plot_axis: bool;
-    :param images: list of images;
+    :param number_cols: int
+    :param window_name: str
+    :param plot_axis: bool;  If it is True, then the axis are shown.
+    :param images: list of images
     :param show_now: bool; If it is True, then the image is shown.
     :return: None;
     """
@@ -65,10 +69,11 @@ def show_images(plot_axis=True, number_cols=2, images=[], titles=None, window_na
         plt.imshow(images[i], cmap="gray")
     if show_now:
         plt.show()
+    # TODO show images + plots
 
 
 def plot_histogram(image, mask=None, show_hist=True):
-    """ Displays grayscale or rgb histogram depending on the image
+    """ Displays grayscale or rgb histogram depending on the image.
 
     :param image: image
     :param show_hist: bool; True: firstly calculates histogram and secondly shows histogram(s).
@@ -88,6 +93,7 @@ def __plot_grayscale_histogram(image, mask=None):
     """ Displays intensity values from an image.
 
     :param image: image
+    :param mask: mask; The mask helps to find out which intensity values are in the selected area
     :return: None
     """
     hist = cv2.calcHist([image], [0], mask, [256], [0, 256])
@@ -127,7 +133,7 @@ def create_round_mask(image, center=None, radius=100):
     :param center: tuple of int ( x-coordinate, y-coordinate) for mask
                     if it is None then the masked is placed in the middle of the image.
     :param radius: int; radius for mask
-    :return: mask
+    :return: mask; The mask helps to find out which intensity values are in the selected area
     """
     if center is None:
         center = (image.shape[1] // 2, image.shape[0] // 2)
@@ -139,6 +145,4 @@ def create_round_mask(image, center=None, radius=100):
         plt.imshow(cv2.bitwise_and(src1=image, src2=image, mask=circle), cmap="gray")
     else:
         plt.imshow(cv2.bitwise_and(src1=image, src2=image, mask=circle))
-
-    plt.show()
     return circle
