@@ -1,3 +1,6 @@
+""" Experiment 8: Finding Corners.
+
+"""
 import numpy as np
 import cv2
 import imageAnalyzer
@@ -14,6 +17,11 @@ titles = []
 
 
 def apply_harris(image):
+    """ Converts image in gray-scale, applies customized Canny Edge Detector and applies Harris Detector.
+
+    :param image: str; path of the image
+    :return: bool list; If the element is True, then it is a corner
+    """
     images.clear()
     titles.clear()
     image_rgb = imageCleaner.load_image(image)
@@ -21,12 +29,12 @@ def apply_harris(image):
     images.append(image_gray)
     titles.append("Grayscale Image")
 
-    # Edited Canny
+    # Customized Canny
     image_blur = imageCleaner.add_gaussian_blur(image=image_gray, kernel_size=(21, 21))
     image_closing = cv2.morphologyEx(image_blur, cv2.MORPH_CLOSE, cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (5, 5)))
     image_canny = imageCleaner.apply_canny_filter(image=image_closing, threshold1=125, threshold2=175)
     image_canny_finished = cv2.morphologyEx(image_canny, cv2.MORPH_CLOSE,
-                                            cv2.getStructuringElement(cv2.MORPH_RECT, (9, 9)))
+                                            cv2.getStructuringElement(cv2.MORPH_RECT, (12, 12)))
     images.append(image_canny_finished)
     titles.append("Canny Image")
 
@@ -43,18 +51,28 @@ def apply_harris(image):
 
 
 def extract_corner_array(corner_array):
+    """Converts a bool list into a list with tuples of the corner coordinates  %TODO besser beschreiben
+
+    :param corner_array: bool list; If the element is True, then it is a corner
+    :return: list with tuples of corner; e.g. [ (1,1), (2,4)] %TODO besser beschreiben
+    """
     all_corners = []
     # Collect and extract found corners
     for x_coordinate in range(corner_array.shape[1]):
         for y_coordinate in range(corner_array.shape[0]):
             if corner_array[y_coordinate, x_coordinate]:
                 all_corners.append((x_coordinate, y_coordinate))
-    print("Anzahl Ecken: {}".format(len(all_corners)))
+    print("Number of Corners: {}".format(len(all_corners)))
     return all_corners
 
 
 def get_coordinates_old(corner_list):
-    # Sort out unnecessary corners
+    """ Sorts out unnecessary corners.
+
+    Put first corner in the corner_list. If the next corner is far enough (MAX_DISTANCE) away from corners in the corner list, then the corner will be appended to the corner_list.
+    :param corner_list:
+    :return: corner_list
+    """
     remaining_corners = []
 
     for corner in corner_list:
@@ -68,13 +86,20 @@ def get_coordinates_old(corner_list):
         if not already_there:
             remaining_corners.append(corner)
         # else:
-        #     print("Verworfene Ecke {}".format(corner))
+        #     print("Discarded Corners {}".format(corner))
 
-    print("Anzahl Ecken: {}".format(len(remaining_corners)))
+    print("Number of Corners: {}".format(len(remaining_corners)))
     return remaining_corners
 
 
 def get_coordinates(corner_list):
+    """ Sorts out unnecessary corners.
+
+    Build clusters with corners that are within a certain MAX_DISTANCE.
+    The average value of the corners is calculated from the respective cluster and this is the new corner point.W
+    :param corner_list:
+    :return: corner_list
+    """
     cluster_list = []
     for corner in corner_list:
         check_find = False
@@ -98,31 +123,31 @@ def get_coordinates(corner_list):
             x_coordinate += point[0]
             y_coordinate += point[1]
             number_of_points += 1
-        x_coordinate = x_coordinate/number_of_points
-        y_coordinate = y_coordinate/number_of_points
+        x_coordinate = x_coordinate / number_of_points
+        y_coordinate = y_coordinate / number_of_points
         final_corners.append((x_coordinate, y_coordinate))
 
     return final_corners
 
 
 os.chdir(image_path)
-# for file_name in os.listdir(os.getcwd()):
-#     if file_name.lower().endswith('.png'):
-corners = apply_harris(file_name)
+for file_name in os.listdir(os.getcwd()):
+    if file_name.lower().endswith('.png'):
+        corners = apply_harris(file_name)
 
-final_corners_v1 = get_coordinates_old(extract_corner_array(corners))
-final_corners_v1 = np.array(final_corners_v1)     # Umwandeln von Liste zu Matrix
-x, y = final_corners_v1.T
-imageAnalyzer.show_images(plot_axis=False, number_cols=2, images=images, titles=titles, window_name=file_name, show_now=False)
-plt.subplot(2, 2, 3)    # TODO 3 statt 4
-plt.scatter(x, y, marker="*", color="red")
+        final_corners_v1 = get_coordinates_old(extract_corner_array(corners))
+        final_corners_v1 = np.array(final_corners_v1)     # Umwandeln von Liste zu Matrix
+        x, y = final_corners_v1.T
+        imageAnalyzer.show_images(plot_axis=False, number_cols=2, images=images, titles=titles, window_name=file_name, show_now=False)
+        plt.subplot(2, 2, 3)    # TODO 3 statt 4
+        plt.scatter(x, y, marker="*", color="red")
 
-final_corners_v2 = get_coordinates(extract_corner_array(corners))
-final_corners_v2 = np.array(final_corners_v2)     # Umwandeln von Liste zu Matrix
-x, y = final_corners_v2.T
-plt.subplot(2, 2, 3)    # TODO 3 statt 4
-plt.scatter(x, y, marker=".", color="green")
+        final_corners_v2 = get_coordinates(extract_corner_array(corners))
+        final_corners_v2 = np.array(final_corners_v2)     # Umwandeln von Liste zu Matrix
+        x, y = final_corners_v2.T
+        plt.subplot(2, 2, 3)    # TODO 3 statt 4
+        plt.scatter(x, y, marker=".", color="green")
 
-plt.show()
+        plt.show()
 
 
