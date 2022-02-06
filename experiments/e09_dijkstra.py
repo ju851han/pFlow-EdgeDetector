@@ -22,8 +22,8 @@ def check_for_corner(point, corner_list):
         b = point[1] - corner[1]
         distance = sqrt(a ** 2 + b ** 2)
         if distance <= MAX_DISTANCE_CORNER:
-            return True
-    return False
+            return corner
+    return None
 
 
 def apply_dijkstra(img, start_point=(0, 3), corner_list=[]):
@@ -39,10 +39,10 @@ def apply_dijkstra(img, start_point=(0, 3), corner_list=[]):
     job_list = [point]
     aim_point = None
 
-    plt.imshow(img, cmap="gray")
-    plt.plot(start_point[0], start_point[1], "ro")  # red o-marker
-    for corner in corner_list:
-        plt.plot(corner[0], corner[1], "go")  # red o-marker
+    # plt.imshow(img, cmap="gray")
+    # plt.plot(start_point[0], start_point[1], "ro")  # red o-marker
+    # for corner in corner_list:
+    #     plt.plot(corner[0], corner[1], "go")  # red o-marker
     # Dijkstra:
     while len(job_list) > 0:    # FIFO = First In First Out = breadth-first search
         # print("Liste = {}".format(job_list))
@@ -52,8 +52,9 @@ def apply_dijkstra(img, start_point=(0, 3), corner_list=[]):
             continue  # already done
         cost_matrix[point[1]][point[0]] = cost
         # Is current point a corner?
-        if check_for_corner(point, corner_list):
-            aim_point = point
+        found_corner = check_for_corner(point, corner_list)
+        if found_corner is not None:
+            aim_point = found_corner
             break
         neighbors = get_neighbors(point)    # 4er neighborhood
         for neighbor in neighbors:
