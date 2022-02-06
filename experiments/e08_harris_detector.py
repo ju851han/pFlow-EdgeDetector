@@ -16,15 +16,7 @@ images = []
 titles = []
 
 
-def apply_harris(image):
-    """ Converts image in gray-scale, applies customized Canny Edge Detector and applies Harris Detector.
-
-    :param image: str; path of the image
-    :return: bool list; If the element is True, then it is a corner
-    """
-    images.clear()
-    titles.clear()
-    image_rgb = imageCleaner.load_image(image)
+def apply_customized_canny(image):
     image_gray = imageCleaner.transform_file_into_grayscale_image(image)
     images.append(image_gray)
     titles.append("Grayscale Image")
@@ -37,11 +29,20 @@ def apply_harris(image):
                                             cv2.getStructuringElement(cv2.MORPH_RECT, (12, 12)))
     images.append(image_canny_finished)
     titles.append("Canny Image")
+    return np.float32(image_canny_finished)
 
-    # Harris
-    canny = np.float32(image_canny_finished)
+
+def apply_harris(orig_image, canny_image):
+    """ Converts image in gray-scale, applies customized Canny Edge Detector and applies Harris Detector.
+
+    :param orig_image: str; path of the image
+    :param canny_image:
+    :return: bool list; If the element is True, then it is a corner
+    """
+
+    image_rgb = imageCleaner.load_image(orig_image)
     # dst = cv2.cornerHarris(canny, 2, 3, 0.04)
-    dst = cv2.cornerHarris(src=canny, blockSize=2, ksize=5, k=0.05)
+    dst = cv2.cornerHarris(src=canny_image, blockSize=2, ksize=5, k=0.05)
     # Threshold for an optimal value, it may vary depending on the image.
     image_rgb[dst > 0.01 * dst.max()] = [0, 0, 255]
     images.append(image_rgb)
@@ -123,31 +124,32 @@ def get_coordinates(corner_list):
             x_coordinate += point[0]
             y_coordinate += point[1]
             number_of_points += 1
-        x_coordinate = x_coordinate / number_of_points
-        y_coordinate = y_coordinate / number_of_points
+        x_coordinate = int(x_coordinate / number_of_points)
+        y_coordinate = int(y_coordinate / number_of_points)
         final_corners.append((x_coordinate, y_coordinate))
 
     return final_corners
 
 
-os.chdir(image_path)
-for file_name in os.listdir(os.getcwd()):
-    if file_name.lower().endswith('.png'):
-        corners = apply_harris(file_name)
+if __name__ == '__main__':
+    os.chdir(image_path)
+    for file_name in os.listdir(os.getcwd()):
+        if file_name.lower().endswith('.png'):
+            images.clear()
+            titles.clear()
+            corners = apply_harris(file_name, apply_customized_canny(file_name))
 
-        final_corners_v1 = get_coordinates_old(extract_corner_array(corners))
-        final_corners_v1 = np.array(final_corners_v1)     # Umwandeln von Liste zu Matrix
-        x, y = final_corners_v1.T
-        imageAnalyzer.show_images(plot_axis=False, number_cols=2, images=images, titles=titles, window_name=file_name, show_now=False)
-        plt.subplot(2, 2, 3)    # TODO 3 statt 4
-        plt.scatter(x, y, marker="*", color="red")
+            final_corners_v1 = get_coordinates_old(extract_corner_array(corners))
+            final_corners_v1 = np.array(final_corners_v1)     # Umwandeln von Liste zu Matrix
+            x, y = final_corners_v1.T
+            imageAnalyzer.show_images(plot_axis=False, number_cols=2, images=images, titles=titles, window_name=file_name, show_now=False)
+            plt.subplot(2, 2, 3)    # TODO 3 statt 4
+            plt.scatter(x, y, marker="*", color="red")
 
-        final_corners_v2 = get_coordinates(extract_corner_array(corners))
-        final_corners_v2 = np.array(final_corners_v2)     # Umwandeln von Liste zu Matrix
-        x, y = final_corners_v2.T
-        plt.subplot(2, 2, 3)    # TODO 3 statt 4
-        plt.scatter(x, y, marker=".", color="green")
+            final_corners_v2 = get_coordinates(extract_corner_array(corners))
+            final_corners_v2 = np.array(final_corners_v2)     # Umwandeln von Liste zu Matrix
+            x, y = final_corners_v2.T
+            plt.subplot(2, 2, 3)    # TODO 3 statt 4
+            plt.scatter(x, y, marker=".", color="green")
 
-        plt.show()
-
-
+            plt.show()
