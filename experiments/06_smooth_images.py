@@ -24,16 +24,16 @@ def create_titles():
     titles.append("Edge Preserving Filter")
 
 
-def analyze_every_filter_behavior(image, k_size=5, show_plt_now=True):
+def analyze_every_filter_behavior(image_path, k_size=5, show_plt_now=True):
     """ Applies the filters to the image and shows the result.
 
-    :param image: image
+    :param image_path: str; path or file name of the image
     :param k_size: int; size of the kernel (filter matrix)
     :param show_plt_now: bool;  If it is True, then the image is shown.
     :return: None
     """
     images = []
-    image = imageCleaner.transform_file_into_grayscale_image(image)
+    image = imageCleaner.transform_file_into_grayscale_image(image_path)
     images.append(image)
     images.append(imageCleaner.add_gaussian_blur(image=image, kernel_size=(k_size, k_size)))
     # imageCleaner.apply_simple_threshold(130)
@@ -81,5 +81,5 @@ for file_name in os.listdir(os.getcwd()):
         # image_size = os.path.getsize(os.getcwd() + "/" + file_name)  # Output in Bytes
         # print(image_size)
         for i in [3, 5, 7, 9, 11, 21]:
-            analyze_every_filter_behavior(image=file_name, k_size=i, show_plt_now=False)
+            analyze_every_filter_behavior(image_path=file_name, k_size=i, show_plt_now=False)
         plt.show()
