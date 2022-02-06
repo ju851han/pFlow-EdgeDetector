@@ -3,6 +3,8 @@
     Result: The 2. Attempt will be used in the final version because canny and harris detector expect a grayscale-image.
 """
 import os
+
+import imageAnalyzer
 import imageCleaner
 
 
@@ -16,3 +18,5 @@ for file_name in os.listdir(os.getcwd()):
         gray_image = imageCleaner.transform_file_into_grayscale_image(file_name)
 
         imageCleaner.show_image(image=gray_image, title=file_name, wait_for_close=True)
+        imageAnalyzer.plot_histogram(gray_image)
+        # imageAnalyzer.show_image(image=gray_image, plot_axis=True)
