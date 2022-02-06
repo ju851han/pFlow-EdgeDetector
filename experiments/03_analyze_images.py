@@ -25,7 +25,7 @@ def analyze_images(folder=None):
             image = imageCleaner.load_image(file_name)
             # image = imageCleaner.transform_colored_into_grayscale_image(file_name)
             imageAnalyzer.plot_histogram(image, show_hist=False)
-            imageAnalyzer.show_image(image)
+            imageAnalyzer.show_image(image=image, plot_axis=False, window_name=file_name)
             if file_name == "Dog.png" and folder == "photos":
                 mask = imageAnalyzer.create_round_mask(image=image, center=(500, 700), radius=350)  # Dog-face
                 imageAnalyzer.plot_histogram(image, mask)
