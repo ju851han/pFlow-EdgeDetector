@@ -19,9 +19,27 @@ def remove_tuple_from_list(corner_list: list, corner_tuple):
     return corner_list
 
 
+def get_upper_right_corner(corner_list, x_step = 1, y_step = 1):
+    x_max = 0
+    y_min = 900000000000000000 #TODO image size
+    max_corner = None
+
+    for corner in corner_list:
+        x = int(corner[0] /x_step)
+        y = int(corner[1] /y_step)
+        if x > x_max:
+            if y < y_min:
+                x_max = x
+                y_min = y
+                max_corner = corner
+
+    return max_corner
+
+
 def create_polygon(img, corner_list):
     polygon = Polygon()
-    start_corner = corner_list.pop(-1)
+    start_corner = get_upper_right_corner(corner_list)
+    corner_list = remove_tuple_from_list(corner_list, start_corner)
     polygon.add_point(start_corner[0], start_corner[1])
 
     while len(corner_list) > 0:
@@ -33,7 +51,7 @@ def create_polygon(img, corner_list):
             break
         print(corner_list)
 
-    polygon.save_to_file()
+    return polygon
 
 
 def create_simple_polygon():
@@ -59,7 +77,10 @@ def main(img_path):
     corners = e08_harris_detector.apply_harris(img_path, edges_img)
     cleaned_corners = e08_harris_detector.get_coordinates(e08_harris_detector.extract_corner_array(corners))
     int_array = edges_img.astype(int)
-    create_polygon(int_array, cleaned_corners)
+    polygon = create_polygon(int_array, cleaned_corners)
+    while len(cleaned_corners) > 0:
+        polygon.add_inner_polygons(create_polygon(int_array, cleaned_corners))
+    polygon.save_to_file()
     print("fertig")
 
 
