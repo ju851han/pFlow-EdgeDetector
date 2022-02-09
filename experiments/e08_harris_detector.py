@@ -41,7 +41,7 @@ def apply_harris(orig_image, canny_image):
     """
 
     image_rgb = imageCleaner.load_image(orig_image)
-    # dst = cv2.cornerHarris(canny, 2, 3, 0.04)
+    # dst = cv2.cornerHarris(canny_image, 2, 3, 0.04)
     dst = cv2.cornerHarris(src=canny_image, blockSize=2, ksize=5, k=0.05)
     # Threshold for an optimal value, it may vary depending on the image.
     image_rgb[dst > 0.01 * dst.max()] = [0, 0, 255]
