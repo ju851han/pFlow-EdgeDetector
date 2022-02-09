@@ -467,6 +467,7 @@ def add_edge_preserving_filter(image):  # TODO ggf. ansehen
 def apply_canny_filter(image, threshold1=125, threshold2=175):
     """Edge Filter: Places a filter according to the Canny Edge Algorithm over the image and returns  an image.
 
+    Further Information:  https://docs.opencv.org/3.4/da/d5c/tutorial_canny_detector.html
     Hint: If a blurred image is passed, then fewer edges are detected.
     :param threshold2: int
     :param threshold1: int
