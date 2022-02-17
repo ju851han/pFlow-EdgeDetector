@@ -1,9 +1,9 @@
 """ Experiment 5: Executes different point operations: Thresholding, changing Colors in an area and inverting images.
 
     Result of apply_threshold():
-    adaptive_threshold-method is for natural images because the structure from the tree and dog (e.g. of the Dog.png) still intact .
+    adaptive_threshold-method is for natural images because the structure from the tree and dog (e.g. of the Dog.png) still intact.
     simple_threshold-method is good for floor_plans.
-    Outlook: Canny Edge Detector uses a Hysteresis Threshold which will be described in #TODO Ref
+    Outlook: Canny Edge Detector uses a Hysteresis Threshold which will be described in https://github.com/ju851han/pFlow-EdgeDetector/blob/main/main.py
 """
 import os
 import imageCleaner
