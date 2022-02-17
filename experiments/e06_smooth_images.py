@@ -1,5 +1,5 @@
 """ Experiment 6: Find out which filter is best for preprocessing.
-
+    The goal is to find a filter that preserves the edges from the walls, but smooths the texts so that the most accurate detection of the edges occurs.
     Result: Gaussian Blur with kernel size = 21 and Edge Preserving Filter could be suitable for the preprocessing.
 """
 import os
@@ -12,7 +12,7 @@ titles = []
 
 
 def create_titles():
-    """ Saves titles in the title list.
+    """ Saves titles in the title list which are used in  show_images()-method for showing the titles above the images in the plot.
 
     :return: None
     """
@@ -22,6 +22,9 @@ def create_titles():
     titles.append("Bilateral Blur")
     titles.append("Median Blur")
     titles.append("Edge Preserving Filter")
+    # titles.append("Laplace Filter")
+    # titles.append("Sobel Filter")
+    # titles.append("Canny Filter")
 
 
 def analyze_every_filter_behavior(image_path, k_size=5, show_plt_now=True):
@@ -36,8 +39,6 @@ def analyze_every_filter_behavior(image_path, k_size=5, show_plt_now=True):
     image = imageCleaner.transform_file_into_grayscale_image(image_path)
     images.append(image)
     images.append(imageCleaner.add_gaussian_blur(image=image, kernel_size=(k_size, k_size)))
-    # imageCleaner.apply_simple_threshold(130)
-    # imageCleaner.apply_adaptive_threshold(neighborhood_size=81)
     images.append(imageCleaner.add_average_blur(image=image, kernel_size=(k_size, k_size)))
     images.append(imageCleaner.add_bilateral_blur(image))
     images.append(imageCleaner.add_median_blur(image=image, kernel_size=k_size))
