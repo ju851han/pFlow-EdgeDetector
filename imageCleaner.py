@@ -412,8 +412,6 @@ def add_median_blur(image, kernel_size=3):
     return cv2.medianBlur(src=image, ksize=kernel_size)
 
 
-
-
 def add_bilateral_blur(image, kernel_size=5, sigma_color=15, sigma_space=15):
     """ Unlike the other methods this method also blurs the image, but it does not make the edges less sharp.
 
