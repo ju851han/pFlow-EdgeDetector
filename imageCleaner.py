@@ -464,24 +464,6 @@ def add_edge_preserving_filter(image):  # TODO ggf. ansehen
     return cv2.edgePreservingFilter(src=image)
 
 
-def apply_canny_filter(image, threshold1=125, threshold2=175):
-    """Edge Filter: Places a filter according to the Canny Edge Algorithm over the image and returns  an image.
-
-    Further Information:  https://docs.opencv.org/3.4/da/d5c/tutorial_canny_detector.html
-    Hint: If a blurred image is passed, then fewer edges are detected.
-    :param threshold2: int
-    :param threshold1: int
-    :param image: image
-    :return: image
-    """
-    __check_threshold(threshold1)
-    __check_threshold(threshold2)
-    if len(image.shape) != 2:
-        image = transform_colored_into_grayscale_image(image)
-
-    return cv2.Canny(image=image, threshold1=threshold1, threshold2=threshold2)  # TODO threshold bestimmen
-
-
 def apply_laplacian(image):
     """Edge Filter
 
@@ -500,7 +482,7 @@ def apply_sobel(image):
 
 
     :param image: image
-    :return:0
+    :return:image
     """
     if len(image.shape) != 2:
         transform_colored_into_grayscale_image(image)
@@ -509,6 +491,31 @@ def apply_sobel(image):
     sobel_y = cv2.Sobel(src=image, ddepth=cv2.CV_64F, dx=0, dy=1)
     combined_sobel = cv2.bitwise_or(sobel_x, sobel_y)
     return combined_sobel
+
+#############
+# DETECTORs #
+#############
+"""
+
+"""
+
+
+def apply_canny_filter(image, threshold1=125, threshold2=175):
+    """Edge Filter: Places a filter according to the Canny Edge Algorithm over the image and returns  an image.
+
+    Further Information:  https://docs.opencv.org/3.4/da/d5c/tutorial_canny_detector.html
+    Hint: If a blurred image is passed, then fewer edges are detected.
+    :param threshold2: int
+    :param threshold1: int
+    :param image: image
+    :return: image
+    """
+    __check_threshold(threshold1)
+    __check_threshold(threshold2)
+    if len(image.shape) != 2:
+        image = transform_colored_into_grayscale_image(image)
+
+    return cv2.Canny(image=image, threshold1=threshold1, threshold2=threshold2)  # TODO threshold bestimmen
 
 
 def identify_contours_and_hierarchies(image, mode='all hierarchic contours', method='CHAIN_APPROX_NONE',
