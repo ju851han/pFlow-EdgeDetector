@@ -28,22 +28,22 @@ def __check_rgb_values(red, green, blue):
     """
     if not isinstance(red, int):
         raise TypeError("Data type of red must be int.\n"
-                        "Current red value: " + str(red) + "\n"
-                                                           "Current data type of red: " + str(type(red)))
+                        "Current red value:{}\n"
+                        "Current data type of red: {}".format(red, type(red)))
     elif not isinstance(green, int):
         raise TypeError("Data type of green must be int.\n"
-                        "Current green value: " + str(green) + "\n"
-                                                               "Current data type of green: " + str(type(green)))
+                        "Current green value: {}\n"
+                        "Current data type of green: {}" .format(green, type(green)))
     elif not isinstance(blue, int):
         raise TypeError("Data type of blue must be int.\n"
-                        "Current blue value: " + str(blue) + "\n"
-                                                             "Current data type of blue: " + str(type(blue)))
+                        "Current blue value: {}\n"
+                        "Current data type of blue: {}".format(blue, type(blue)))
     elif red < MIN_GRAY_VALUE or red > MAX_GRAY_VALUE:
-        raise ValueError("Value of Red is incorrect. Current red value: " + str(red))
+        raise ValueError("Value of Red is incorrect. Current red value: {}".format(red))
     elif green < MIN_GRAY_VALUE or green > MAX_GRAY_VALUE:
-        raise ValueError("Value of Green is incorrect. Current green value: " + str(green))
+        raise ValueError("Value of Green is incorrect. Current green value:{}".format(green))
     elif blue < MIN_GRAY_VALUE or blue > MAX_GRAY_VALUE:
-        raise ValueError("Value of Blue is incorrect. Current blue value: " + str(blue))
+        raise ValueError("Value of Blue is incorrect. Current blue value:{}".format(blue))
     elif red == MIN_GRAY_VALUE and green == MIN_GRAY_VALUE and blue == MIN_GRAY_VALUE:
         raise AttributeError("The value of red, green and blue is 0.\n"
                              "At least one value of red, green or blue must be greater than zero.")
@@ -57,10 +57,10 @@ def __check_threshold(value):
     """
     if not isinstance(value, int):
         raise TypeError("Data type of the threshold value must be int.\n"
-                        "Current threshold value is: " + str(value) + "\n"
-                        "Current data type of the threshold value is: " + str(type(value)))
+                        "Current threshold value is: {} \n"
+                        "Current data type of the threshold value is: {}".format(value, type(value)))
     elif value < MIN_GRAY_VALUE or value > MAX_GRAY_VALUE:
-        raise ValueError("The threshold value is incorrect. It must be between 0 and 255. Current threshold value is: " + str(value))
+        raise ValueError("The threshold value is incorrect. It must be between 0 and 255. Current threshold value is: {}".format(value))
 
 
 def __check_height(image, height):  #TODO WINDOW_HEIGHT
@@ -72,11 +72,11 @@ def __check_height(image, height):  #TODO WINDOW_HEIGHT
     :return: None
     """
     if height > image.shape[0]:
-        raise ValueError("The height value is incorrect. It must be smaller than the image height. Current height value is: " + str(height))
+        raise ValueError("The height value is incorrect. It must be smaller than the image height. Current height value is: {}".format(height))
     elif not isinstance(height, int):
         raise TypeError("Data type of the height must be int.\n"
-                        "Current height is: " + str(height) + "\n"
-                        "Current data type of height: " + str(type(height)))
+                        "Current height is: {} \n"
+                        "Current data type of height: {}".format(height, type(height)))
 
 
 def __check_width(image, width):    #TODO WINDOW_WIDTH
@@ -89,12 +89,11 @@ def __check_width(image, width):    #TODO WINDOW_WIDTH
     """
     if width > image.shape[1]:
         raise ValueError(
-            "The width value is incorrect. It must be smaller than the image width. Current width value is: " + str(
-                width))
+            "The width value is incorrect. It must be smaller than the image width. Current width value is: {}".format(width))
     elif not isinstance(width, int):
         raise TypeError("Data type of the height must be int.\n"
-                        "Current height is: " + str(width) + "\n"
-                        "Current data type of height: " + str(type(width)))
+                        "Current height is: {} \n"
+                        "Current data type of height: {}".format(width, type(width)))
 
 
 ##########
@@ -283,8 +282,7 @@ def apply_adaptive_threshold(image, neighborhood_size=11, offset=0, invert=False
     elif adaptive_method_name.lower() == 'mean':
         adaptive_method = cv2.ADAPTIVE_THRESH_MEAN_C
     else:
-        raise AttributeError('The passed value for adaptiveMethod is not valid.\n'
-                             'Valid values are \'Gaussian or Mean\'. Current value is:' + str(adaptive_method_name))
+        raise AttributeError("The passed value for adaptiveMethod is not valid.\n Valid values are \'Gaussian or Mean\'. Current value is: {}".format(adaptive_method_name))
 
     return cv2.adaptiveThreshold(src=image, maxValue=MAX_GRAY_VALUE, adaptiveMethod=adaptive_method,
                                  thresholdType=thresh_type, blockSize=neighborhood_size, C=offset)
@@ -415,6 +413,8 @@ def add_median_blur(image, kernel_size=3):
 def add_bilateral_blur(image, kernel_size=5, sigma_color=15, sigma_space=15):
     """ Unlike the other methods this method also blurs the image, but it does not make the edges less sharp.
 
+    Further Information: https://docs.opencv.org/4.x/d4/d86/group__imgproc__filter.html#ga9d7064d478c95d60003cf839430737ed
+    https://machinelearningknowledge.ai/bilateral-filtering-in-python-opencv-with-cv2-bilateralfilter/
     :param image: image
     :param kernel_size: tuple of int: (number_of_rows, number_of cols)
     :param sigma_color: int; if it is a high number, then different colors are in the surrounding pixels
@@ -429,9 +429,9 @@ def add_bilateral_blur(image, kernel_size=5, sigma_color=15, sigma_space=15):
 
 
 def add_edge_preserving_filter(image):  # TODO ggf. ansehen
-    """Real-Time Edge-Preserving Denoising Filter
-    Usage for Non-Photorealistic Rendering
+    """Real-Time Edge-Preserving Denoising Filter: It is used for Non-Photorealistic Rendering.
 
+    Further Information: https://docs.opencv.org/4.x/df/dac/group__photo__render.html#gafaee2977597029bc8e35da6e67bd31f7
     :param image: image
     :return: image
     """
@@ -465,6 +465,8 @@ def apply_sobel(image):
     sobel_y = cv2.Sobel(src=image, ddepth=cv2.CV_64F, dx=0, dy=1)
     combined_sobel = cv2.bitwise_or(sobel_x, sobel_y)
     return combined_sobel
+
+#TODO add closing + opening
 
 #############
 # DETECTORs #
