@@ -412,30 +412,6 @@ def add_median_blur(image, kernel_size=3):
     return cv2.medianBlur(src=image, ksize=kernel_size)
 
 
-def dilating_image(image, kernel_size=(3, 3), number_of_iterations=1):
-    """Morphological operation: Expands bright Pixel-Areas
-
-    :param image: image
-    :param kernel_size: tuple of int: (number_of_rows, number_of cols)
-    :param number_of_iterations: int; TODO
-    :return: image
-    """
-    __check_height(image, kernel_size[0])
-    __check_width(image, kernel_size[1])
-    return cv2.dilate(src=image, kernel=kernel_size, iterations=number_of_iterations)
-
-
-def eroding_image(image, kernel_size=(3, 3), number_of_iterations=1):
-    """Morphological operation: Reduces bright Pixel-Areas
-
-    :param image: image
-    :param kernel_size: tuple of int: (number_of_rows, number_of cols)
-    :param number_of_iterations: int; TODO
-    :return: image
-    """
-    __check_height(image, kernel_size[0])
-    __check_width(image, kernel_size[1])
-    return cv2.erode(image, kernel=kernel_size, iterations=number_of_iterations)
 
 
 def add_bilateral_blur(image, kernel_size=5, sigma_color=15, sigma_space=15):
