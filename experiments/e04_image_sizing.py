@@ -19,25 +19,14 @@ def resize_image(image_path):
     return image
 
 
-def resize_image_without_distortion(image_path): #TODO in imageCleaner einfügen
+def resize_image_without_distortion(image_path):
     """ Resizes the image so that it can be displayed in pFlowGRID.
 
     :param image_path: str
     :return: image
     """
     image = imageCleaner.transform_file_into_grayscale_image(image_path)
-    if image.shape[1] >= WINDOW_WIDTH:
-        factor = WINDOW_WIDTH / image.shape[1]
-        y_new = int(image.shape[0] * factor)
-        if y_new < WINDOW_HEIGHT:
-            image = imageCleaner.resize_image(image=image, x=WINDOW_WIDTH, y=y_new)
-        else:
-            factor = WINDOW_HEIGHT / image.shape[0]
-            image = imageCleaner.resize_image(image=image, x=int(image.shape[1] * factor), y=WINDOW_HEIGHT)
-    elif image.shape[0] >= WINDOW_HEIGHT:
-        factor = WINDOW_HEIGHT / image.shape[0]
-        image = imageCleaner.resize_image(image=image, x=int(image.shape[1] * factor), y=WINDOW_HEIGHT)
-    return image
+    return imageCleaner.resize_image_without_distortion(image)
 
 
 def snip_image(image_path):

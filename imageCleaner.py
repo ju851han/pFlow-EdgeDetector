@@ -33,7 +33,7 @@ def __check_rgb_values(red, green, blue):
     elif not isinstance(green, int):
         raise TypeError("Data type of green must be int.\n"
                         "Current green value: {}\n"
-                        "Current data type of green: {}" .format(green, type(green)))
+                        "Current data type of green: {}".format(green, type(green)))
     elif not isinstance(blue, int):
         raise TypeError("Data type of blue must be int.\n"
                         "Current blue value: {}\n"
@@ -60,10 +60,12 @@ def __check_threshold(value):
                         "Current threshold value is: {} \n"
                         "Current data type of the threshold value is: {}".format(value, type(value)))
     elif value < MIN_GRAY_VALUE or value > MAX_GRAY_VALUE:
-        raise ValueError("The threshold value is incorrect. It must be between 0 and 255. Current threshold value is: {}".format(value))
+        raise ValueError(
+            "The threshold value is incorrect. It must be between 0 and 255. Current threshold value is: {}".format(
+                value))
 
 
-def __check_height(image, height):  #TODO WINDOW_HEIGHT
+def __check_height(image, height):  # TODO WINDOW_HEIGHT
     """ Checks if the height is smaller or equals to image-height.
 
     Used for checking y-axis and kernel size.
@@ -72,14 +74,16 @@ def __check_height(image, height):  #TODO WINDOW_HEIGHT
     :return: None
     """
     if height > image.shape[0]:
-        raise ValueError("The height value is incorrect. It must be smaller than the image height. Current height value is: {}".format(height))
+        raise ValueError(
+            "The height value is incorrect. It must be smaller than the image height. Current height value is: {}".format(
+                height))
     elif not isinstance(height, int):
         raise TypeError("Data type of the height must be int.\n"
                         "Current height is: {} \n"
                         "Current data type of height: {}".format(height, type(height)))
 
 
-def __check_width(image, width):    #TODO WINDOW_WIDTH
+def __check_width(image, width):  # TODO WINDOW_WIDTH
     """ Checks if the width is smaller or equals to image-width.
 
     Used for checking x-axis and kernel size.
@@ -89,7 +93,8 @@ def __check_width(image, width):    #TODO WINDOW_WIDTH
     """
     if width > image.shape[1]:
         raise ValueError(
-            "The width value is incorrect. It must be smaller than the image width. Current width value is: {}".format(width))
+            "The width value is incorrect. It must be smaller than the image width. Current width value is: {}".format(
+                width))
     elif not isinstance(width, int):
         raise TypeError("Data type of the height must be int.\n"
                         "Current height is: {} \n"
@@ -150,12 +155,12 @@ def show_image(image, scale=1, title='Image', wait_for_close=False):
 def resize_image(image, x=WINDOW_WIDTH, y=WINDOW_HEIGHT):
     """ Changes the size of the image.
 
-        Default parameter values are the window width (x) and height (y) of pFlowGRID.
-        :param image: image
-        :param x: int; size of the x-axis
-        :param y: int; size of the y-axis
-        :return: image
-        """
+    Default parameter values are the window width (x) and height (y) of pFlowGRID.
+    :param image: image
+    :param x: int; size of the x-axis
+    :param y: int; size of the y-axis
+    :return: image
+    """
     orig_width = int(image.shape[1])
     __check_width(image, orig_width)
     orig_height = int(image.shape[0])
@@ -164,6 +169,26 @@ def resize_image(image, x=WINDOW_WIDTH, y=WINDOW_HEIGHT):
         return cv2.resize(src=image, dsize=(x, y), interpolation=cv2.INTER_AREA)
     else:
         return cv2.resize(src=image, dsize=(x, y), interpolation=cv2.INTER_LINEAR)
+
+
+def resize_image_without_distortion(image):
+    """ Resizes the image so that it can be displayed in pFlowGRID.
+
+    :param image: image
+    :return: image
+    """
+    if image.shape[1] >= WINDOW_WIDTH:
+        factor = WINDOW_WIDTH / image.shape[1]
+        y_new = int(image.shape[0] * factor)
+        if y_new < WINDOW_HEIGHT:
+            image = resize_image(image=image, x=WINDOW_WIDTH, y=y_new)
+        else:
+            factor = WINDOW_HEIGHT / image.shape[0]
+            image = resize_image(image=image, x=int(image.shape[1] * factor), y=WINDOW_HEIGHT)
+    elif image.shape[0] >= WINDOW_HEIGHT:
+        factor = WINDOW_HEIGHT / image.shape[0]
+        image = resize_image(image=image, x=int(image.shape[1] * factor), y=WINDOW_HEIGHT)
+    return image
 
 
 def snip_image(image, x_min=0, x_max=WINDOW_WIDTH, y_min=0, y_max=WINDOW_HEIGHT):
@@ -282,7 +307,9 @@ def apply_adaptive_threshold(image, neighborhood_size=11, offset=0, invert=False
     elif adaptive_method_name.lower() == 'mean':
         adaptive_method = cv2.ADAPTIVE_THRESH_MEAN_C
     else:
-        raise AttributeError("The passed value for adaptiveMethod is not valid.\n Valid values are \'Gaussian or Mean\'. Current value is: {}".format(adaptive_method_name))
+        raise AttributeError(
+            "The passed value for adaptiveMethod is not valid.\n Valid values are \'Gaussian or Mean\'. Current value is: {}".format(
+                adaptive_method_name))
 
     return cv2.adaptiveThreshold(src=image, maxValue=MAX_GRAY_VALUE, adaptiveMethod=adaptive_method,
                                  thresholdType=thresh_type, blockSize=neighborhood_size, C=offset)
@@ -466,10 +493,11 @@ def apply_sobel(image):
     combined_sobel = cv2.bitwise_or(sobel_x, sobel_y)
     return combined_sobel
 
-#TODO add closing + opening
+
+# TODO add closing + opening
 
 #############
-# DETECTORs #
+# DETECTORS #
 #############
 """
 
