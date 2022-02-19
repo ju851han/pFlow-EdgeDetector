@@ -1,5 +1,5 @@
-""" Experiment 9: Create Polygons
-
+""" Experiment 9: Create Polygons - Part 1
+    Implement and test Dijkstra Algorithm to create Polygons.
 """
 from math import sqrt
 import numpy as np
@@ -11,11 +11,11 @@ MAX_DISTANCE_CORNER = 0
 
 
 def check_for_corner(point, corner_list):
-    """Checks if the point is a corner?
+    """Checks if the point is close to a corner.
 
-    :param point:
+    :param point: tuple of int
     :param corner_list: list of corners
-    :return: bool; If it is a corner, then True is returned.
+    :return: bool; If it is close to a corner, then True is returned.
     """
     for corner in corner_list:
         a = point[0] - corner[0]
@@ -26,23 +26,23 @@ def check_for_corner(point, corner_list):
     return None
 
 
-def apply_dijkstra(img, start_point=(0, 3), corner_list=[]):
-    """
+def apply_customized_dijkstra(img, start_point=(0, 3), corner_list=[]):
+    """Search for nearest corner by using Dijkstra Algorithm.
 
-    :param img:
-    :param start_point:
-    :param corner_list: corner list without start_point
-    :return:
+    :param img: image
+    :param start_point: tuple of int
+    :param corner_list: list of corners without start_point
+    :return: tuple of int
     """
     point = (start_point[0], start_point[1], 1)    # x, y, cost
     cost_matrix = np.zeros(img.shape)
     job_list = [point]
     aim_point = None
 
-    # plt.imshow(img, cmap="gray")
-    # plt.plot(start_point[0], start_point[1], "ro")  # red o-marker
-    # for corner in corner_list:
-    #     plt.plot(corner[0], corner[1], "go")  # red o-marker
+    plt.imshow(img, cmap="gray")
+    plt.plot(start_point[0], start_point[1], "ro")  # red o-marker
+    for corner in corner_list:
+        plt.plot(corner[0], corner[1], "go")  # red o-marker
     # Dijkstra:
     while len(job_list) > 0:    # FIFO = First In First Out = breadth-first search
         # print("Liste = {}".format(job_list))
@@ -87,28 +87,41 @@ def apply_dijkstra(img, start_point=(0, 3), corner_list=[]):
 
 
 def get_neighbors(point):
+    """Returns 4 neighbors of the point.
+
+    :param point: tuple of int
+    :return: list of int-tuples
+    """
     return [(point[0], point[1] - 1),
             (point[0] - 1, point[1]), (point[0] + 1, point[1]),
             (point[0], point[1] + 1)]
 
 
 def simple_dijkstra():
+    """Test method for apply_customized_dijkstra() with a simple image.
+
+    :return: None
+    """
     img = np.array([[0, 0, 1, 1, 1],
                     [0, 1, 1, 1, 1],
                     [1, 1, 0, 0, 1],
                     [1, 1, 1, 1, 1]])
 
-    apply_dijkstra(img)
+    apply_customized_dijkstra(img)
 
 
 def create_polygon_from_dijkstra():
+    """Test method for apply_customized_dijkstra() with a bigger image and 3 corners.
+
+    :return: None
+    """
     img = np.array([[0, 0, 1, 1, 1, 1, 0],
                     [0, 1, 1, 0, 0, 1, 1],
                     [1, 1, 0, 0, 0, 1, 1],
                     [1, 1, 0, 0, 0, 1, 1],
                     [1, 1, 1, 1, 1, 1, 1]])
 
-    apply_dijkstra(img, (0, 4), [(4, 0), (6, 4)])   #TODO pass cornerliste without startpoint
+    apply_customized_dijkstra(img, (0, 4), [(4, 0), (6, 4)])
 
 
 if __name__ == '__main__':
