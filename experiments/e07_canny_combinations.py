@@ -7,7 +7,7 @@
     For Post-Processing is the following setting recommended:
     * Closing with kernel size = 7 and kernel form = Rectangle (for filling the white corners in the wall)
 """
-import imageAnalyzer
+from experiments import imageAnalyzer
 import imageCleaner
 # import os
 
