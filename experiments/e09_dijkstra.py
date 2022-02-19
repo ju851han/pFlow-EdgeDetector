@@ -14,7 +14,7 @@ def check_for_corner(point, corner_list):
     """Checks if the point is close to a corner.
 
     :param point: tuple of int
-    :param corner_list: list of corners
+    :param corner_list: list with tuples of corner; e.g. [ (1,1), (2,4)]
     :return: bool; If it is close to a corner, then True is returned.
     """
     for corner in corner_list:

@@ -15,9 +15,9 @@ file_name = 'O_0_1.png'
 def remove_tuple_from_list(corner_list: list, corner_tuple):
     """Looks for given corner_tuple in corner_list and removes it.
 
-    :param corner_list:     list of corner tuples
-    :param corner_tuple:    corner tuple to be removed from list
-    :return:
+    :param corner_list: list of corner tuples
+    :param corner_tuple: tuple of int; corner tuple to be removed from list
+    :return: list of corner tuples
     """
     for i in range(len(corner_list)):
         if corner_tuple[0] == corner_list[i][0] and corner_tuple[1] == corner_list[i][1]:
@@ -29,10 +29,10 @@ def remove_tuple_from_list(corner_list: list, corner_tuple):
 def get_upper_right_corner(corner_list, x_step=1, y_step=1):
     """Searches the upper right corner in a given corner_list.
 
-    :param corner_list: list of corner tuples
-    :param x_step:      stepsize x
-    :param y_step:      stepsize y
-    :return: tuple with upper right corner
+    :param corner_list: list with tuples of corner; e.g. [ (1,1), (2,4)]
+    :param x_step: int, step-size in x-direction
+    :param y_step: int, step-size in y-direction
+    :return: tuple of int; tuple with coordinates of the upper right corner
     """
     x_max = 0
     y_min = 900000000000000000
@@ -54,7 +54,7 @@ def create_polygon(img, corner_list):
     """Creates polygon by using Dijkstra Algorithm.
 
     :param img: image
-    :param corner_list: list of corners
+    :param corner_list: list with tuples of corner; e.g. [ (1,1), (2,4)]
     :return: Polygon
     """
     polygon = Polygon()
