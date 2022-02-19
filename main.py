@@ -3,8 +3,7 @@ from math import sqrt
 import imageCleaner
 from polygon import Polygon
 
-image_path = "training_images/simplified_floor_plan/"
-file_name = "training_images/simplified_floor_plan/O_0_1.png"
+image_path = "training_images/simplified_floor_plan/O_0_1.png"
 WALL_VALUE = 255  # gray-value can be used by dijkstra
 FLOOR_VALUE = 0  # gray-value cannot be used by dijkstra
 MAX_DISTANCE_CORNER = 20  # cluster-size for detected corners
@@ -227,7 +226,7 @@ def create_polygon(img, corner_list):
 
 if __name__ == '__main__':
     # os.chdir(image_path)
-    edges_img = apply_customized_canny(file_name)
+    edges_img = apply_customized_canny(image_path)
     corners = imageCleaner.apply_harris_detector(edges_img)
     if len(corners) < 1:
         raise AttributeError(
