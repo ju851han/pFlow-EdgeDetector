@@ -1,3 +1,6 @@
+""" Methods for Analyzing Images
+
+"""
 import math
 import cv2
 from matplotlib import pyplot as plt
@@ -71,7 +74,6 @@ def show_images(plot_axis=True, number_cols=2, images=[], titles=None, window_na
         plt.imshow(images[i], cmap="gray")
     if show_now:
         plt.show()
-    # TODO show images + plots
 
 
 def plot_histogram(image, mask=None, show_hist=True):

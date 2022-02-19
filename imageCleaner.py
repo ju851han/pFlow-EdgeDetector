@@ -1,12 +1,12 @@
-""" Methods for Loading and Processing Images (Pictures)
+""" Methods for Loading and Processing Images
 
 """
 import os.path
 import cv2
 import numpy as np
 
-WINDOW_WIDTH = 1300
-WINDOW_HEIGHT = 610
+WINDOW_WIDTH = 1300     #taken from pFlow_GRID
+WINDOW_HEIGHT = 610     #taken from pFlow_GRID
 MIN_GRAY_VALUE = 0
 MAX_GRAY_VALUE = 255
 
