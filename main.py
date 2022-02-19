@@ -225,7 +225,6 @@ def create_polygon(img, corner_list):
 
 
 if __name__ == '__main__':
-    # os.chdir(image_path)
     edges_img = apply_customized_canny(image_path)
     corners = imageCleaner.apply_harris_detector(edges_img)
     if len(corners) < 1:
