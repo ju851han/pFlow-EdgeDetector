@@ -429,7 +429,7 @@ def add_median_blur(image, kernel_size=3):
 
     Hint: This method tends to be more effective in reducing noise in an image than average and gussian blur
     :param image: image
-    :param kernel_size: tuple of int: (number_of_rows, number_of cols)
+    :param kernel_size: tuple of int: (number_of_rows, number_of cols) #TODO
     :return: image
     """
     __check_height(image, kernel_size[0])
@@ -443,7 +443,7 @@ def add_bilateral_blur(image, kernel_size=5, sigma_color=15, sigma_space=15):
     Further Information: https://docs.opencv.org/4.x/d4/d86/group__imgproc__filter.html#ga9d7064d478c95d60003cf839430737ed
     https://machinelearningknowledge.ai/bilateral-filtering-in-python-opencv-with-cv2-bilateralfilter/
     :param image: image
-    :param kernel_size: tuple of int: (number_of_rows, number_of cols)
+    :param kernel_size: tuple of int: (number_of_rows, number_of cols)  #TODO
     :param sigma_color: int; if it is a high number, then different colors are in the surrounding pixels
                         which are noted when applying bilateral blur.
     :param sigma_space: int; Larger values for this sigma space mean that pixels further away from the hot spot
@@ -494,18 +494,38 @@ def apply_sobel(image):
     return combined_sobel
 
 
-# TODO add closing + opening
+def apply_closing(image, kernel_size=5, form="ellipse"):
+    """ Morphological Filter
+
+    :param image: image
+    :param kernel_size:  #TODO
+    :param form: str;
+    :return:
+    """
+    __check_height(image, kernel_size)
+    __check_width(image, kernel_size)
+    if form.lower() == "ellipse":
+        return cv2.morphologyEx(image, cv2.MORPH_CLOSE,
+                                cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (kernel_size, kernel_size)))
+    elif form.lower() == "rectangle":
+        return cv2.morphologyEx(image, cv2.MORPH_CLOSE,
+                                cv2.getStructuringElement(cv2.MORPH_RECT, (kernel_size, kernel_size)))
+    else:
+        raise AttributeError(
+            "For form is only allowed 'ellipse' or 'rectangle'. Current form value is: {}".format(form))
+
 
 #############
 # DETECTORS #
 #############
-"""
+""" A detector has the task of finding characteristic features or distinctive points in an image.
+Predefined methods or sets of commands are used for this purpose.
 
 """
 
 
 def apply_canny_filter(image, threshold1=125, threshold2=175):
-    """Edge Filter: Places a filter according to the Canny Edge Algorithm over the image and returns  an image.
+    """Canny Edge Detector: Places a filter according to the Canny Edge Algorithm over the image and returns  an image.
 
     Further Information:  https://docs.opencv.org/3.4/da/d5c/tutorial_canny_detector.html
     Hint: If a blurred image is passed, then fewer edges are detected.
