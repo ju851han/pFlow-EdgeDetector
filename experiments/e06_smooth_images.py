@@ -38,11 +38,11 @@ def analyze_every_filter_behavior(image_path, k_size=5, show_plt_now=True):
     images = []
     image = imageCleaner.transform_file_into_grayscale_image(image_path)
     images.append(image)
-    images.append(imageCleaner.add_gaussian_blur(image=image, kernel_size=(k_size, k_size)))
-    images.append(imageCleaner.add_average_blur(image=image, kernel_size=(k_size, k_size)))
-    images.append(imageCleaner.add_bilateral_blur(image))
-    images.append(imageCleaner.add_median_blur(image=image, kernel_size=k_size))
-    images.append(imageCleaner.add_edge_preserving_filter(image=image))
+    images.append(imageCleaner.apply_gaussian_blur(image=image, kernel_size=(k_size, k_size)))
+    images.append(imageCleaner.apply_average_blur(image=image, kernel_size=(k_size, k_size)))
+    images.append(imageCleaner.apply_bilateral_blur(image))
+    images.append(imageCleaner.apply_median_blur(image=image, kernel_size=k_size))
+    images.append(imageCleaner.apply_edge_preserving_filter(image=image))
     # images.append(imageCleaner.apply_laplacian(image))
     # images.append(imageCleaner.apply_sobel(image))
     # images.append(imageCleaner.apply_canny_filter(image))
@@ -61,11 +61,11 @@ def apply_all_filter_to_one_image():
             images = []
             image = imageCleaner.transform_file_into_grayscale_image(file)
             images.append(image)
-            images.append(imageCleaner.add_gaussian_blur(image, (5, 5)))
-            images.append(imageCleaner.add_average_blur(images[0], kernel_size=(5, 5)))
-            images.append(imageCleaner.add_bilateral_blur(images[1]))
-            images.append(imageCleaner.add_median_blur(images[2]))
-            images.append(imageCleaner.add_edge_preserving_filter(images[3]))
+            images.append(imageCleaner.apply_gaussian_blur(image, (5, 5)))
+            images.append(imageCleaner.apply_average_blur(images[0], kernel_size=(5, 5)))
+            images.append(imageCleaner.apply_bilateral_blur(images[1]))
+            images.append(imageCleaner.apply_median_blur(images[2]))
+            images.append(imageCleaner.apply_edge_preserving_filter(images[3]))
             # images.append(imageCleaner.apply_laplacian(images[4]))
             # images.append(imageCleaner.apply_sobel(images[5]))
             # images.append(imageCleaner.apply_canny_filter(images[6]))
@@ -79,8 +79,6 @@ create_titles()
 
 for file_name in os.listdir(os.getcwd()):
     if file_name.lower().endswith('.png'):
-        # image_size = os.path.getsize(os.getcwd() + "/" + file_name)  # Output in Bytes
-        # print(image_size)
         for i in [3, 5, 7, 9, 11, 21]:
             analyze_every_filter_behavior(image_path=file_name, k_size=i, show_plt_now=False)
         plt.show()

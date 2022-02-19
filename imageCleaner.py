@@ -65,7 +65,7 @@ def __check_threshold(value):
                 value))
 
 
-def __check_height(image, height):  # TODO WINDOW_HEIGHT
+def __check_height(image, height):
     """ Checks if the height is smaller or equals to image-height.
 
     Used for checking y-axis and kernel size.
@@ -83,7 +83,7 @@ def __check_height(image, height):  # TODO WINDOW_HEIGHT
                         "Current data type of height: {}".format(height, type(height)))
 
 
-def __check_width(image, width):  # TODO WINDOW_WIDTH
+def __check_width(image, width):
     """ Checks if the width is smaller or equals to image-width.
 
     Used for checking x-axis and kernel size.
@@ -126,7 +126,7 @@ def load_image(image_path):
 
 
 def show_image(image, scale=1, title='Image', wait_for_close=False):
-    """Displays a Picture.
+    """Displays an image.
 
     :param image: image
     :param wait_for_close: bool; if this is True, then the window will be closed as soon a button is pressed
@@ -373,22 +373,20 @@ def change_color_in_pixel(image, y, x, blue=0, green=0, red=255):
 ###########
 # FILTERS #
 ###########
-# TODO edit description
 """
 A filter smooths the image by adding a blur to it.  
 One reason for using a filter is if the image contains a lot of noise because
 applying the filter reduces the noises in the image.
+Filters are also used to find edges.
 
 The parameter ksize is an abbreviation for kernel size which is often used in the blurring methods.
 The kernel size specifies how many pixel-rows and pixel-columns the kernel is large.
 A kernel is a small matrix which is drawn over the image step by step. 
 The hot spot is the middle pixel of the kernel.
-
-The different blurring methods are described in the respective method.
 """
 
 
-def add_gaussian_blur(image, kernel_size=(3, 3), sigma_x=2):
+def apply_gaussian_blur(image, kernel_size=(3, 3), sigma_x=2):
     """ Smoothing filter: Calculates the weight from the pixels in the kernel
         - how often the intensity values occur in the surrounding pixels and the hot spot at the kernel.
         The product of the weight is the new pixel value of the hot spot.
@@ -397,6 +395,7 @@ def add_gaussian_blur(image, kernel_size=(3, 3), sigma_x=2):
     If the noise is also high, then a high kernel size is recommended (e.g.: (7,7)).
     If the noise is also low, then a smaller kernel size is recommended (e.g.: (3,3)).
     Hint: If the apply_canny_filter() is called after add_gaussian_blur(), then the noises are removed
+    Further Information: https://docs.opencv.org/3.4/dc/dd3/tutorial_gausian_median_blur_bilateral_filter.html
     :param image: image
     :param kernel_size: tuple of int: (number_of_rows, number_of cols)
     :param sigma_x: int; width of the gaussian bell
@@ -409,11 +408,12 @@ def add_gaussian_blur(image, kernel_size=(3, 3), sigma_x=2):
     return cv2.GaussianBlur(src=image, ksize=kernel_size, sigmaX=sigma_x)
 
 
-def add_average_blur(image, kernel_size=(3, 3)):
+def apply_average_blur(image, kernel_size=(3, 3)):
     """Smoothing filter: Calculates the average of the intensity values from the pixels in the kernel.
     The result is the new pixel value of the hot spot.
 
     Synonym: box filter
+    Further Information: https://docs.opencv.org/3.4/dc/dd3/tutorial_gausian_median_blur_bilateral_filter.html
     :param image: image
     :param kernel_size: tuple of int: (number_of_rows, number_of cols)
     :return: image
@@ -423,21 +423,22 @@ def add_average_blur(image, kernel_size=(3, 3)):
     return cv2.blur(src=image, ksize=kernel_size)
 
 
-def add_median_blur(image, kernel_size=3):
+def apply_median_blur(image, kernel_size=3):
     """Ranking filter: Calculates the median of the intensity values from the pixels in the kernel.
     The result is the new pixel value of the hot spot.
 
     Hint: This method tends to be more effective in reducing noise in an image than average and gussian blur
+    Further Information: https://docs.opencv.org/3.4/dc/dd3/tutorial_gausian_median_blur_bilateral_filter.html
     :param image: image
-    :param kernel_size: tuple of int: (number_of_rows, number_of cols) #TODO
+    :param kernel_size: int
     :return: image
     """
-    __check_height(image, kernel_size[0])
-    __check_width(image, kernel_size[1])
+    __check_height(image, kernel_size)
+    __check_width(image, kernel_size)
     return cv2.medianBlur(src=image, ksize=kernel_size)
 
 
-def add_bilateral_blur(image, kernel_size=5, sigma_color=15, sigma_space=15):
+def apply_bilateral_blur(image, kernel_size=5, sigma_color=15, sigma_space=15):
     """ Unlike the other methods this method also blurs the image, but it does not make the edges less sharp.
 
     Further Information: https://docs.opencv.org/4.x/d4/d86/group__imgproc__filter.html#ga9d7064d478c95d60003cf839430737ed
@@ -455,7 +456,7 @@ def add_bilateral_blur(image, kernel_size=5, sigma_color=15, sigma_space=15):
     return cv2.bilateralFilter(src=image, d=kernel_size, sigmaSpace=sigma_space, sigmaColor=sigma_color)
 
 
-def add_edge_preserving_filter(image):  # TODO ggf. ansehen
+def apply_edge_preserving_filter(image):  # TODO ggf. ansehen
     """Real-Time Edge-Preserving Denoising Filter: It is used for Non-Photorealistic Rendering.
 
     Further Information: https://docs.opencv.org/4.x/df/dac/group__photo__render.html#gafaee2977597029bc8e35da6e67bd31f7
@@ -468,6 +469,7 @@ def add_edge_preserving_filter(image):  # TODO ggf. ansehen
 def apply_laplacian(image):
     """Edge Filter
 
+    Further Information: https://docs.opencv.org/3.4/d5/db5/tutorial_laplace_operator.html
     :param image: image
     :return: image
     """
@@ -481,7 +483,7 @@ def apply_laplacian(image):
 def apply_sobel(image):
     """Edge Filter
 
-
+    Furhter Information: https://docs.opencv.org/3.4/d2/d2c/tutorial_sobel_derivatives.html
     :param image: image
     :return:image
     """
@@ -494,16 +496,18 @@ def apply_sobel(image):
     return combined_sobel
 
 
-def apply_closing(image, kernel_size=5, form="ellipse"):
-    """ Morphological Filter
+def apply_closing(image, kernel_size=(5, 5), form="ellipse"):
+    """ Morphological Filter: Closing is performed by dilatation followed by erosion.
 
+    This connects small particles and closes holes in the image.
+    Further Information: https://docs.opencv.org/3.4/d3/dbe/tutorial_opening_closing_hats.html
     :param image: image
-    :param kernel_size:  #TODO
+    :param kernel_size:  tuple of int: (number_of_rows, number_of cols) #TODO
     :param form: str;
-    :return:
+    :return: image
     """
-    __check_height(image, kernel_size)
-    __check_width(image, kernel_size)
+    __check_height(image, kernel_size[0])
+    __check_width(image, kernel_size[1])
     if form.lower() == "ellipse":
         return cv2.morphologyEx(image, cv2.MORPH_CLOSE,
                                 cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (kernel_size, kernel_size)))
