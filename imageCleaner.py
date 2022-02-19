@@ -444,7 +444,7 @@ def apply_bilateral_blur(image, kernel_size=5, sigma_color=15, sigma_space=15):
     Further Information: https://docs.opencv.org/4.x/d4/d86/group__imgproc__filter.html#ga9d7064d478c95d60003cf839430737ed
     https://machinelearningknowledge.ai/bilateral-filtering-in-python-opencv-with-cv2-bilateralfilter/
     :param image: image
-    :param kernel_size: tuple of int: (number_of_rows, number_of cols)  #TODO
+    :param kernel_size: tuple of int: (number_of_rows, number_of cols)
     :param sigma_color: int; if it is a high number, then different colors are in the surrounding pixels
                         which are noted when applying bilateral blur.
     :param sigma_space: int; Larger values for this sigma space mean that pixels further away from the hot spot
@@ -456,7 +456,7 @@ def apply_bilateral_blur(image, kernel_size=5, sigma_color=15, sigma_space=15):
     return cv2.bilateralFilter(src=image, d=kernel_size, sigmaSpace=sigma_space, sigmaColor=sigma_color)
 
 
-def apply_edge_preserving_filter(image):  # TODO ggf. ansehen
+def apply_edge_preserving_filter(image):
     """Real-Time Edge-Preserving Denoising Filter: It is used for Non-Photorealistic Rendering.
 
     Further Information: https://docs.opencv.org/4.x/df/dac/group__photo__render.html#gafaee2977597029bc8e35da6e67bd31f7
@@ -502,7 +502,7 @@ def apply_closing(image, kernel_size=(5, 5), form="ellipse"):
     This connects small particles and closes holes in the image.
     Further Information: https://docs.opencv.org/3.4/d3/dbe/tutorial_opening_closing_hats.html
     :param image: image
-    :param kernel_size:  tuple of int: (number_of_rows, number_of cols) #TODO
+    :param kernel_size:  tuple of int: (number_of_rows, number_of cols)
     :param form: str;
     :return: image
     """
@@ -542,8 +542,7 @@ def apply_canny_detector(image, threshold1=125, threshold2=175):
     __check_threshold(threshold2)
     if len(image.shape) != 2:
         image = transform_colored_into_grayscale_image(image)
-
-    return cv2.Canny(image=image, threshold1=threshold1, threshold2=threshold2)  # TODO threshold bestimmen
+    return cv2.Canny(image=image, threshold1=threshold1, threshold2=threshold2)
 
 
 def apply_harris_detector(image, block_size=2, kernel_size=5, k=0.05):
@@ -559,7 +558,7 @@ def apply_harris_detector(image, block_size=2, kernel_size=5, k=0.05):
     """
     __check_width(image, kernel_size)
     __check_height(image, kernel_size)
-    __check_width(image, block_size)
+    __check_width(image, block_size)  #TODO
     __check_height(image, block_size)
     if block_size <= 1:
         raise AttributeError("Too small block_size was given. Current block_size value is: {}".format(block_size))
