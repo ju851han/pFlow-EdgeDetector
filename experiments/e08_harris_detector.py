@@ -4,12 +4,12 @@
     Next, in order to better extract the corners, the following approaches were tested:
     1. approach was to take the first corner per cluster which is described in get_coordinates_old().
     2. approach was to calculate averaged corner per cluster which is described in get_coordinates().
-    The result of the second approach reflects the positions of the actual corners better than in the first approach.
+    Result: second approach reflects the positions of the actual corners better than in the first approach.
 
 """
 import numpy as np
-import cv2 #TODO
-import imageAnalyzer
+import cv2
+from experiments import imageAnalyzer
 import imageCleaner
 import os
 from math import sqrt
@@ -23,6 +23,11 @@ titles = []
 
 
 def apply_customized_canny(image):
+    """ Applies Gaussian Blur, Closing and Canny Detector according to the experiment 7 (e07_canny_combinations.py).
+
+    :param image: image
+    :return: image
+    """
     image_gray = imageCleaner.transform_file_into_grayscale_image(image)
     images.append(image_gray)
     titles.append("Grayscale Image")
@@ -41,8 +46,8 @@ def apply_harris(orig_image, canny_image):
     """ Converts image in gray-scale, applies customized Canny Edge Detector and applies Harris Detector.
 
     :param orig_image: str; path of the image
-    :param canny_image:
-    :return: bool list; If the element is True, then it is a corner
+    :param canny_image: image; image which was preprocessed with apply_customized_canny()
+    :return: bool array; If the element is True, then it is a corner
     """
 
     image_rgb = imageCleaner.load_image(orig_image)
@@ -56,10 +61,10 @@ def apply_harris(orig_image, canny_image):
 
 
 def extract_corner_array(corner_array):
-    """Converts a bool list into a list with tuples of the corner coordinates  %TODO besser beschreiben
+    """Converts a bool array into a list with tuples of the corner coordinates
 
-    :param corner_array: bool list; If the element is True, then it is a corner
-    :return: list with tuples of corner; e.g. [ (1,1), (2,4)] %TODO besser beschreiben
+    :param corner_array: bool array; If the element is True, then it is a corner
+    :return: list with tuples of corner; e.g. [ (1,1), (2,4)]
     """
     all_corners = []
     # Collect and extract found corners
@@ -71,12 +76,12 @@ def extract_corner_array(corner_array):
     return all_corners
 
 
-def get_coordinates_old(corner_list):   #TODO bessere Methodennamen
+def get_coordinates_old(corner_list):
     """ Sorts out unnecessary corners.
 
     Put first corner in the corner_list. If the next corner is far enough (MAX_DISTANCE) away from corners in the corner list, then the corner will be appended to the corner_list.
-    :param corner_list:
-    :return: corner_list
+    :param corner_list: list with tuples of corner; e.g. [ (1,1), (2,4)]
+    :return: list with tuples of corner; e.g. [ (1,1), (2,4)]
     """
     remaining_corners = []
 
@@ -97,13 +102,13 @@ def get_coordinates_old(corner_list):   #TODO bessere Methodennamen
     return remaining_corners
 
 
-def get_coordinates(corner_list):   #TODO bessere Methodennamen
+def get_coordinates(corner_list):
     """ Sorts out unnecessary corners.
 
     Build clusters with corners that are within a certain MAX_DISTANCE.
     The average value of the corners is calculated from the respective cluster and this is the new corner point.W
-    :param corner_list:
-    :return: corner_list
+    :param corner_list: list with tuples of corner; e.g. [ (1,1), (2,4)]
+    :return: list with tuples of corner; e.g. [ (1,1), (2,4)]
     """
     cluster_list = []
     for corner in corner_list:
