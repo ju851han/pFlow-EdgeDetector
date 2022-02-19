@@ -510,10 +510,10 @@ def apply_closing(image, kernel_size=(5, 5), form="ellipse"):
     __check_width(image, kernel_size[1])
     if form.lower() == "ellipse":
         return cv2.morphologyEx(image, cv2.MORPH_CLOSE,
-                                cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (kernel_size, kernel_size)))
+                                cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (kernel_size[0], kernel_size[1])))
     elif form.lower() == "rectangle":
         return cv2.morphologyEx(image, cv2.MORPH_CLOSE,
-                                cv2.getStructuringElement(cv2.MORPH_RECT, (kernel_size, kernel_size)))
+                                cv2.getStructuringElement(cv2.MORPH_RECT, (kernel_size[0], kernel_size[1])))
     else:
         raise AttributeError(
             "For form is only allowed 'ellipse' or 'rectangle'. Current form value is: {}".format(form))
@@ -528,8 +528,8 @@ Predefined methods or sets of commands are used for this purpose.
 """
 
 
-def apply_canny_filter(image, threshold1=125, threshold2=175):
-    """Canny Edge Detector: Places a filter according to the Canny Edge Algorithm over the image and returns  an image.
+def apply_canny_detector(image, threshold1=125, threshold2=175):
+    """Canny Edge Detector: Places a filter according to the Canny Edge Algorithm over the image and returns an image.
 
     Further Information:  https://docs.opencv.org/3.4/da/d5c/tutorial_canny_detector.html
     Hint: If a blurred image is passed, then fewer edges are detected.
@@ -544,6 +544,28 @@ def apply_canny_filter(image, threshold1=125, threshold2=175):
         image = transform_colored_into_grayscale_image(image)
 
     return cv2.Canny(image=image, threshold1=threshold1, threshold2=threshold2)  # TODO threshold bestimmen
+
+
+def apply_harris_detector(image, block_size=2, kernel_size=5, k=0.05):
+    """Harris Corner Detector
+
+    :param image: image
+    :param block_size: int; number of neighborhood pixels
+    :param kernel_size: int
+    :param k: double; The parameter specifies how pronounced the corner is to detect it.
+                      The smaller the value is chosen for this parameter, the more corners will be detected.
+    :return: image
+    """
+    __check_width(image, kernel_size)
+    __check_height(image, kernel_size)
+    __check_width(image, block_size)
+    __check_height(image, block_size)
+    if block_size <= 1:
+        raise AttributeError("Too small block_size was given. Current block_size value is: {}".format(block_size))
+    if kernel_size <= block_size:
+        raise AttributeError("kernel_size must be larger than the block_size.\n Current kernel_size value is: {}\nCurrent block_size value is: {} ".format(kernel_size, block_size))
+    dst = cv2.cornerHarris(src=image, blockSize=block_size, ksize=kernel_size, k=k)
+    return dst > 0.01 * dst.max()
 
 
 def identify_contours_and_hierarchies(image, mode='all hierarchic contours', method='CHAIN_APPROX_NONE',
@@ -571,6 +593,6 @@ def identify_contours_and_hierarchies(image, mode='all hierarchic contours', met
         method = cv2.CHAIN_APPROX_NONE
 
     contours, hierarchies = cv2.findContours(
-        image=apply_canny_filter(image=image, threshold1=canny_threshold1, threshold2=canny_threshold2), mode=mode,
+        image=apply_canny_detector(image=image, threshold1=canny_threshold1, threshold2=canny_threshold2), mode=mode,
         method=method)  # image should be a canny image
     return contours, hierarchies
