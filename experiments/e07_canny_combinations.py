@@ -25,17 +25,17 @@ images.append(image_gray)
 titles.append("Grayscale Image")
 
 image_blur = imageCleaner.apply_gaussian_blur(image=image_gray, kernel_size=(21, 21))
-image_canny_orig = imageCleaner.apply_canny_filter(image=image_blur, threshold1=125, threshold2=175)
+image_canny_orig = imageCleaner.apply_canny_detector(image=image_blur, threshold1=125, threshold2=175)
 images.append(image_canny_orig)
 titles.append("Gaussian Blur + Canny")
 
 image_epf = imageCleaner.apply_edge_preserving_filter(image=image_gray)
-image_canny_epf = imageCleaner.apply_canny_filter(image=image_epf, threshold1=125, threshold2=175)
+image_canny_epf = imageCleaner.apply_canny_detector(image=image_epf, threshold1=125, threshold2=175)
 images.append(image_canny_epf)
 titles.append("Edge Preserving Filter + Canny")
 
 image_closing = imageCleaner.apply_closing(image=image_blur, kernel_size=(5, 5), form="ellipse")
-image_closed_canny = imageCleaner.apply_canny_filter(image=image_closing, threshold1=125, threshold2=175)
+image_closed_canny = imageCleaner.apply_canny_detector(image=image_closing, threshold1=125, threshold2=175)
 images.append(image_closed_canny)
 titles.append("Closing 5x5 + Gaussian Blur 5x5 + Canny")
 

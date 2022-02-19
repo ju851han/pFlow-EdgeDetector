@@ -45,7 +45,7 @@ def analyze_every_filter_behavior(image_path, k_size=5, show_plt_now=True):
     images.append(imageCleaner.apply_edge_preserving_filter(image=image))
     # images.append(imageCleaner.apply_laplacian(image))
     # images.append(imageCleaner.apply_sobel(image))
-    # images.append(imageCleaner.apply_canny_filter(image))
+    # images.append(imageCleaner.apply_canny_detector(image))
     imageAnalyzer.show_images(plot_axis=False, number_cols=3, images=images,
                               window_name="{} with kernel size {}".format(file_name, k_size), titles=titles,
                               show_now=show_plt_now)
@@ -68,7 +68,7 @@ def apply_all_filter_to_one_image():
             images.append(imageCleaner.apply_edge_preserving_filter(images[3]))
             # images.append(imageCleaner.apply_laplacian(images[4]))
             # images.append(imageCleaner.apply_sobel(images[5]))
-            # images.append(imageCleaner.apply_canny_filter(images[6]))
+            # images.append(imageCleaner.apply_canny_detector(images[6]))
             imageAnalyzer.show_images(plot_axis=False, number_cols=3, images=images, window_name="Images",
                                       titles=titles)
 
