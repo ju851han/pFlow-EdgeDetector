@@ -89,12 +89,16 @@ def extract_corner_array(corner_array):
     return all_corners
 
 
+################################
+# Methods for Creating Polygon #
+################################
+
 def remove_tuple_from_list(corner_list: list, corner_tuple):
     """Looks for given corner_tuple in corner_list and removes it.
 
     :param corner_list:     list of corner tuples
     :param corner_tuple:    corner tuple to be removed from list
-    :return:
+    :return: list of corner tuples
     """
     for i in range(len(corner_list)):
         if corner_tuple[0] == corner_list[i][0] and corner_tuple[1] == corner_list[i][1]:
@@ -102,10 +106,6 @@ def remove_tuple_from_list(corner_list: list, corner_tuple):
             return corner_list
     return corner_list
 
-
-################################
-# Methods for Creating Polygon #
-################################
 
 def get_upper_right_corner(corner_list, x_step=1, y_step=1):
     """Searches the upper right corner in a given corner_list.
