@@ -1,17 +1,24 @@
-from math import sqrt
+"""Experiment 10: Create Polygons - Part 2
+
+"""
 import os
 import numpy as np
-import matplotlib.pyplot as plt
-
-import imageAnalyzer
 from polygon import Polygon
 from experiments import e09_dijkstra, e08_harris_detector
 
 image_path = "../training_images/simplified_floor_plan/"
 file_name = 'O_0_1.png'
+# image_path = "../training_images/floor_plan/htwg_building_O/"
+# file_name = 'O_0.png'
 
 
 def remove_tuple_from_list(corner_list: list, corner_tuple):
+    """Looks for given corner_tuple in corner_list and removes it.
+
+    :param corner_list:     list of corner tuples
+    :param corner_tuple:    corner tuple to be removed from list
+    :return:
+    """
     for i in range(len(corner_list)):
         if corner_tuple[0] == corner_list[i][0] and corner_tuple[1] == corner_list[i][1]:
             corner_list.pop(i)
@@ -19,14 +26,21 @@ def remove_tuple_from_list(corner_list: list, corner_tuple):
     return corner_list
 
 
-def get_upper_right_corner(corner_list, x_step = 1, y_step = 1):
+def get_upper_right_corner(corner_list, x_step=1, y_step=1):
+    """Searches the upper right corner in a given corner_list.
+
+    :param corner_list: list of corner tuples
+    :param x_step:      stepsize x
+    :param y_step:      stepsize y
+    :return: tuple with upper right corner
+    """
     x_max = 0
-    y_min = 900000000000000000 #TODO image size
+    y_min = 900000000000000000
     max_corner = None
 
     for corner in corner_list:
-        x = int(corner[0] /x_step)
-        y = int(corner[1] /y_step)
+        x = int(corner[0]/x_step)
+        y = int(corner[1]/y_step)
         if x > x_max:
             if y < y_min:
                 x_max = x
@@ -37,13 +51,19 @@ def get_upper_right_corner(corner_list, x_step = 1, y_step = 1):
 
 
 def create_polygon(img, corner_list):
+    """Creates polygon by using Dijkstra Algorithm.
+
+    :param img: image
+    :param corner_list: list of corners
+    :return: Polygon
+    """
     polygon = Polygon()
     start_corner = get_upper_right_corner(corner_list)
     corner_list = remove_tuple_from_list(corner_list, start_corner)
     polygon.add_point(start_corner[0], start_corner[1])
 
     while len(corner_list) > 0:
-        start_corner = e09_dijkstra.apply_dijkstra(img=img, start_point=start_corner, corner_list=corner_list)
+        start_corner = e09_dijkstra.apply_customized_dijkstra(img=img, start_point=start_corner, corner_list=corner_list)
         if start_corner is not None:
             polygon.add_point(start_corner[0], start_corner[1])
             corner_list = remove_tuple_from_list(corner_list, start_corner)
@@ -55,9 +75,9 @@ def create_polygon(img, corner_list):
 
 
 def create_simple_polygon():
-    """
-    Renew e09_dijkstra.create_polygon_from_dijkstra()
-    :return:
+    """Test Method: Builds simple polygon with three corners.
+
+    :return: None
     """
     img = np.array([[0, 0, 1, 1, 1, 1, 0],
                     [0, 1, 1, 0, 0, 1, 1],
@@ -69,6 +89,11 @@ def create_simple_polygon():
 
 
 def main(img_path):
+    """Applies all methods of previous experiments on a real image to build polygons.
+
+    :param img_path: str; path of an image
+    :return: None
+    """
     e09_dijkstra.WALL_VALUE = 255
     e09_dijkstra.FLOOR_VALUE = 0
     e09_dijkstra.MAX_DISTANCE_CORNER = 3
@@ -81,7 +106,6 @@ def main(img_path):
     while len(cleaned_corners) > 0:
         polygon.add_inner_polygons(create_polygon(int_array, cleaned_corners))
     polygon.save_to_file()
-    print("fertig")
 
 
 if __name__ == '__main__':
