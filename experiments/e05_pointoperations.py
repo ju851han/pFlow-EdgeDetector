@@ -3,7 +3,7 @@
     Result of apply_threshold():
     adaptive_threshold-method is for natural images because the structure from the tree and dog (e.g. of the Dog.png) still intact.
     simple_threshold-method is good for floor_plans.
-    Outlook: Canny Edge Detector uses a Hysteresis Threshold which will be described in https://github.com/ju851han/pFlow-EdgeDetector/blob/main/main.py
+    Outlook: Canny Edge Detector uses a Hysteresis Threshold
 """
 import os
 import imageCleaner

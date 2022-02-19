@@ -9,14 +9,8 @@
 """
 from experiments import imageAnalyzer
 import imageCleaner
-# import os
 
-# image_path = "../training_images/floor_plan/"
 file_name = "../training_images/floor_plan/htwg_building_O/O_-1.png"
-
-# os.chdir(image_path)
-# for file_name in os.listdir(os.getcwd()):
-#    if file_name.lower().endswith('.png'):
 images = []
 titles = []
 
