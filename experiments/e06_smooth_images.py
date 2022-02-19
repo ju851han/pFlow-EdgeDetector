@@ -4,7 +4,7 @@
 """
 import os
 import matplotlib.pyplot as plt
-import imageAnalyzer
+from experiments import imageAnalyzer
 import imageCleaner
 
 
