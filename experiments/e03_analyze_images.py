@@ -2,7 +2,7 @@
 
 """
 import imageCleaner
-import imageAnalyzer
+from experiments import imageAnalyzer
 import os
 
 os.chdir('../training_images/')

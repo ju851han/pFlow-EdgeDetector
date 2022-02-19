@@ -4,7 +4,7 @@
 """
 import os
 
-import imageAnalyzer
+from experiments import imageAnalyzer
 import imageCleaner
 
 
