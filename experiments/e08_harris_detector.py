@@ -1,8 +1,14 @@
 """ Experiment 8: Finding Corners.
 
+    At first, Harris Corner Detector was implemented.
+    Next, in order to better extract the corners, the following approaches were tested:
+    1. approach was to take the first corner per cluster which is described in get_coordinates_old().
+    2. approach was to calculate averaged corner per cluster which is described in get_coordinates().
+    The result of the second approach reflects the positions of the actual corners better than in the first approach.
+
 """
 import numpy as np
-import cv2
+import cv2 #TODO
 import imageAnalyzer
 import imageCleaner
 import os
@@ -22,11 +28,10 @@ def apply_customized_canny(image):
     titles.append("Grayscale Image")
 
     # Customized Canny
-    image_blur = imageCleaner.add_gaussian_blur(image=image_gray, kernel_size=(21, 21))
-    image_closing = cv2.morphologyEx(image_blur, cv2.MORPH_CLOSE, cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (5, 5)))
-    image_canny = imageCleaner.apply_canny_filter(image=image_closing, threshold1=125, threshold2=175)
-    image_canny_finished = cv2.morphologyEx(image_canny, cv2.MORPH_CLOSE,
-                                            cv2.getStructuringElement(cv2.MORPH_RECT, (12, 12)))
+    image_blur = imageCleaner.apply_gaussian_blur(image=image_gray, kernel_size=(21, 21))
+    image_closing = imageCleaner.apply_closing(image=image_blur, kernel_size=(5, 5), form="ellipse")
+    image_canny = imageCleaner.apply_canny_detector(image=image_closing, threshold1=125, threshold2=175)
+    image_canny_finished = imageCleaner.apply_closing(image=image_canny, kernel_size=(12, 12), form="rectangle")
     images.append(image_canny_finished)
     titles.append("Canny Image")
     return np.float32(image_canny_finished)
@@ -43,7 +48,6 @@ def apply_harris(orig_image, canny_image):
     image_rgb = imageCleaner.load_image(orig_image)
     # dst = cv2.cornerHarris(canny_image, 2, 3, 0.04)
     dst = cv2.cornerHarris(src=canny_image, blockSize=2, ksize=5, k=0.05)
-    # Threshold for an optimal value, it may vary depending on the image.
     image_rgb[dst > 0.01 * dst.max()] = [0, 0, 255]
     images.append(image_rgb)
     titles.append("Harris Corner Image")
@@ -67,7 +71,7 @@ def extract_corner_array(corner_array):
     return all_corners
 
 
-def get_coordinates_old(corner_list):
+def get_coordinates_old(corner_list):   #TODO bessere Methodennamen
     """ Sorts out unnecessary corners.
 
     Put first corner in the corner_list. If the next corner is far enough (MAX_DISTANCE) away from corners in the corner list, then the corner will be appended to the corner_list.
@@ -93,7 +97,7 @@ def get_coordinates_old(corner_list):
     return remaining_corners
 
 
-def get_coordinates(corner_list):
+def get_coordinates(corner_list):   #TODO bessere Methodennamen
     """ Sorts out unnecessary corners.
 
     Build clusters with corners that are within a certain MAX_DISTANCE.
@@ -140,16 +144,16 @@ if __name__ == '__main__':
             corners = apply_harris(file_name, apply_customized_canny(file_name))
 
             final_corners_v1 = get_coordinates_old(extract_corner_array(corners))
-            final_corners_v1 = np.array(final_corners_v1)     # Umwandeln von Liste zu Matrix
+            final_corners_v1 = np.array(final_corners_v1)     # Transform list into Array
             x, y = final_corners_v1.T
             imageAnalyzer.show_images(plot_axis=False, number_cols=2, images=images, titles=titles, window_name=file_name, show_now=False)
-            plt.subplot(2, 2, 3)    # TODO 3 statt 4
+            plt.subplot(2, 2, 3)
             plt.scatter(x, y, marker="*", color="red")
 
             final_corners_v2 = get_coordinates(extract_corner_array(corners))
-            final_corners_v2 = np.array(final_corners_v2)     # Umwandeln von Liste zu Matrix
+            final_corners_v2 = np.array(final_corners_v2)     # Transform list into Array
             x, y = final_corners_v2.T
-            plt.subplot(2, 2, 3)    # TODO 3 statt 4
+            plt.subplot(2, 2, 3)
             plt.scatter(x, y, marker=".", color="green")
 
             plt.show()
