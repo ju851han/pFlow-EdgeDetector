@@ -1,12 +1,15 @@
 # pFlow-EdgeDetector
 
 ```python
-    pFlow_Edge                    
+    pFlow-EdgeDetector                    
     +---doc                        # Dokumentationen
     +---experiments                # Durchgeführte Experimente
     +---pFlowGRID                  # Bachelorarbeit von Nik Steinbrügge
     +---training_images            # Test-Bilder
-    \---main.py                    # Ergebnis dieser Bachelorarbeit
+    +---imageClearner.py           # Methoden für Bildverarbeitung
+    +---main.py                    # Ergebnis dieser Bachelorarbeit
+    \---polygon.py                 # Klasse für Polygone
+
 ```
 
 Das Ziel dieses Projektes ist es, Polygonzüge aus klaren und simplen Grundrissbilder automatisiert zu erstellen. 
