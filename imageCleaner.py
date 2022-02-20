@@ -5,8 +5,8 @@ import os.path
 import cv2
 import numpy as np
 
-WINDOW_WIDTH = 1300     #taken from pFlowGRID/main.py
-WINDOW_HEIGHT = 610     #taken from pFlowGRID/main.py
+WINDOW_WIDTH = 1300     # taken from pFlowGRID/main.py
+WINDOW_HEIGHT = 610     # taken from pFlowGRID/main.py
 MIN_GRAY_VALUE = 0
 MAX_GRAY_VALUE = 255
 
@@ -427,7 +427,7 @@ def apply_median_blur(image, kernel_size=3):
     """Ranking filter: Calculates the median of the intensity values from the pixels in the kernel.
     The result is the new pixel value of the hot spot.
 
-    Hint: This method tends to be more effective in reducing noise in an image than average and gussian blur
+    Hint: This method tends to be more effective in reducing noise in an image than average and gaussian blur
     Further Information: https://docs.opencv.org/3.4/dc/dd3/tutorial_gausian_median_blur_bilateral_filter.html
     :param image: image
     :param kernel_size: int
@@ -483,7 +483,7 @@ def apply_laplacian(image):
 def apply_sobel(image):
     """Edge Filter
 
-    Furhter Information: https://docs.opencv.org/3.4/d2/d2c/tutorial_sobel_derivatives.html
+    Further Information: https://docs.opencv.org/3.4/d2/d2c/tutorial_sobel_derivatives.html
     :param image: image
     :return:image
     """
@@ -566,4 +566,3 @@ def apply_harris_detector(image, block_size=2, kernel_size=5, k=0.05):
         raise AttributeError("kernel_size must be larger than the block_size.\n Current kernel_size value is: {}\nCurrent block_size value is: {} ".format(kernel_size, block_size))
     dst = cv2.cornerHarris(src=image, blockSize=block_size, ksize=kernel_size, k=k)
     return dst > 0.01 * dst.max()
-

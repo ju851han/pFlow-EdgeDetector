@@ -26,7 +26,7 @@ def check_for_corner(point, corner_list):
     return None
 
 
-def apply_customized_dijkstra(img, start_point=(0, 3), corner_list=[]):
+def apply_customized_dijkstra(img, start_point=(0, 3), corner_list=None):
     """Search for nearest corner by using Dijkstra Algorithm.
 
     :param img: image
@@ -34,6 +34,8 @@ def apply_customized_dijkstra(img, start_point=(0, 3), corner_list=[]):
     :param corner_list: list of corners without start_point
     :return: tuple of int
     """
+    if corner_list is None:
+        corner_list = []
     point = (start_point[0], start_point[1], 1)    # x, y, cost
     cost_matrix = np.zeros(img.shape)
     job_list = [point]

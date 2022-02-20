@@ -48,7 +48,7 @@ def show_image(image, window_name='Image', title=None, show_now=True, contrast_a
         plt.show()
 
 
-def show_images(plot_axis=True, number_cols=2, images=[], titles=None, window_name="Image", show_now=True):
+def show_images(plot_axis=True, number_cols=2, images=None, titles=None, window_name="Image", show_now=True):
     """ Displays images in only one window.
 
     :param titles: str or list of str or None; title of the image
