@@ -16,10 +16,13 @@ Das Ziel dieses Projektes ist es, Polygonzüge aus klaren und simplen Grundrissb
 Um sich in die Bildverarbeitung einzuarbeiten, wurden diverse Experimente (siehe Ordner <a href="">experiments</a>) durchgeführt.
 
 Damit das Ziel schlussendlich erreicht wurde, ist wie folgt vorgegangen worden:
-1. Grundrissbild wird bereinigt, d. h. unerwünschte Bildstrukturen werden verwaschen.
-2. Mittels Canny-Detektor werden danach die Kanten detektiert.
-3. Via Harris-Detektor werden die Ecken lokalisiert.
-5. Um die Ecken sinnvoll miteinander zu verknüpfen, wird eine abgewandelte Form des Dijkstra-Algorithmus verwendet.
+1. Vorverarbeitung erfolgt mit Closing und einem Gaußfilter.
+2. Kanten werden mittels Canny-Kantendetektor lokalisiert.
+3. Für die Nachverarbeitung wird ein Closing eingesetzt.
+4. Ecken werden mittels Harris-Eckendetektor detektiert.
+5. Ecken werden bereinigt.
+6. Mithilfe des Dijkstra Algorithmus werden die Ecken sinnvoll miteinander verbunden. Die Polygone werden erzeugt und abschließend gespeichert
+
 
 Die Implementierung hierzu findet man in <a href="https://github.com/ju851han/pFlow-EdgeDetector/tree/main/experiments">main.py</a>.
 Ausführliche Dokumentation für diese Bachelorarbeit kann entweder im Ordner <a href="https://github.com/ju851han/pFlow-EdgeDetector/blob/main/main.py">doc</a> oder in den Python-Scripten selbst gefunden werden.
