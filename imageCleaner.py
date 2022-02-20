@@ -5,8 +5,8 @@ import os.path
 import cv2
 import numpy as np
 
-WINDOW_WIDTH = 1300     #taken from pFlow_GRID
-WINDOW_HEIGHT = 610     #taken from pFlow_GRID
+WINDOW_WIDTH = 1300     #taken from pFlowGRID/main.py
+WINDOW_HEIGHT = 610     #taken from pFlowGRID/main.py
 MIN_GRAY_VALUE = 0
 MAX_GRAY_VALUE = 255
 
@@ -558,7 +558,7 @@ def apply_harris_detector(image, block_size=2, kernel_size=5, k=0.05):
     """
     __check_width(image, kernel_size)
     __check_height(image, kernel_size)
-    __check_width(image, block_size)  #TODO
+    __check_width(image, block_size)
     __check_height(image, block_size)
     if block_size <= 1:
         raise AttributeError("Too small block_size was given. Current block_size value is: {}".format(block_size))
