@@ -5,7 +5,7 @@
     +---doc                        # Dokumentationen
     +---experiments                # Durchgeführte Experimente
     +---pFlowGRID                  # Bachelorarbeit von Nik Steinbrügge
-    +---training_images            # Bilder  für experiments
+    +---training_images            # Test-Bilder
     \---main.py                    # Ergebnis dieser Bachelorarbeit
 ```
 
