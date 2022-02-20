@@ -15,7 +15,7 @@
 Das Ziel dieses Projektes ist es, Polygonzüge aus klaren und simplen Grundrissbilder automatisiert zu erstellen. 
 Um sich in die Bildverarbeitung einzuarbeiten, wurden diverse Experimente (siehe Ordner <a href="">experiments</a>) durchgeführt.
 
-Damit das Ziel schlussendlich erreicht wurde, ist wie folgt vorgegangen worden:
+Zum Erreichen des Ziels wurden folgende Schritte durchgeführt:
 1. Vorverarbeitung erfolgt mit Closing und einem Gaußfilter.
 2. Kanten werden mittels Canny-Kantendetektor lokalisiert.
 3. Für die Nachverarbeitung wird ein Closing eingesetzt.
