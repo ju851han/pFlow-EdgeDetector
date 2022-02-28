@@ -232,14 +232,18 @@ def create_polygon(img, corner_list):
 
 if __name__ == '__main__':
     edges_img = apply_customized_canny(image_path)
+    print("Step 1/4: Canny-Edge Detector is done.")
     corners = imageCleaner.apply_harris_detector(edges_img)
+    print("Step 2/4: Harris-Corner Detector is done.")
     cleaned_corners = get_coordinates(extract_corner_array(corners))
+    print("Step 3/4: Cleaning Corners is done.")
     if len(cleaned_corners) < 1:
         raise AttributeError(
             "No corners are detected. Make sure that the image is correct or change parameters.\n Current image_path value is: {}".format(
                 image_path))
     int_array = edges_img.astype(int)
     polygon = create_polygon(int_array, cleaned_corners)
+    print("Step 4/4: Creating Polygon(s) is done.")
     while len(cleaned_corners) > 0:
         polygon.add_inner_polygons(create_polygon(int_array, cleaned_corners))
     polygon.save_to_file()
