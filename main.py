@@ -3,8 +3,7 @@ from math import sqrt
 import imageCleaner
 from polygon import Polygon
 
-# image_path = "training_images/simplified_floor_plan/O_0_1.png"
-image_path = "training_images/test_images/Rectangle_With_Rounded_Corners.png"
+image_path = "training_images/simplified_floor_plan/O_0_1.png"
 WALL_VALUE = 255  # gray-value can be used by dijkstra
 FLOOR_VALUE = 0  # gray-value cannot be used by dijkstra
 MAX_DISTANCE_CORNER = 20  # cluster-size for detected corners
