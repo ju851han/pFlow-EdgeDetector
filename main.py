@@ -3,7 +3,8 @@ from math import sqrt
 import imageCleaner
 from polygon import Polygon
 
-image_path = "training_images/simplified_floor_plan/O_0_1.png"
+# image_path = "training_images/simplified_floor_plan/O_0_1.png"
+image_path = "training_images/test_images/Rectangle_With_Rounded_Corners.png"
 WALL_VALUE = 255  # gray-value can be used by dijkstra
 FLOOR_VALUE = 0  # gray-value cannot be used by dijkstra
 MAX_DISTANCE_CORNER = 20  # cluster-size for detected corners
@@ -226,14 +227,18 @@ def create_polygon(img, corner_list):
     return polygon
 
 
+################
+# Main- Method #
+################
+
 if __name__ == '__main__':
     edges_img = apply_customized_canny(image_path)
     corners = imageCleaner.apply_harris_detector(edges_img)
-    if len(corners) < 1:
+    cleaned_corners = get_coordinates(extract_corner_array(corners))
+    if len(cleaned_corners) < 1:
         raise AttributeError(
             "No corners are detected. Make sure that the image is correct or change parameters.\n Current image_path value is: {}".format(
                 image_path))
-    cleaned_corners = get_coordinates(extract_corner_array(corners))
     int_array = edges_img.astype(int)
     polygon = create_polygon(int_array, cleaned_corners)
     while len(cleaned_corners) > 0:
